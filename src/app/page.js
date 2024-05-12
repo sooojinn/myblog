@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { getSortedPostsData } from "/lib/posts.js";
 import styles from "@/styles/Home.module.css";
+import { getSortedPostList } from "/lib/posts";
 
 export default function Home() {
-  const allPostsData = getSortedPostsData();
+  const allPostsData = getSortedPostList();
 
   return (
     <>
