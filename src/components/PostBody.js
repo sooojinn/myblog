@@ -1,3 +1,4 @@
+import styles from "@/styles/PostBody.module.css";
 import { compileMDX } from "next-mdx-remote/rsc";
 
 export default async function PostBody({ data }) {
@@ -7,9 +8,5 @@ export default async function PostBody({ data }) {
     compiledSource: "",
   });
 
-  return (
-    <>
-      <div>{content}</div>
-    </>
-  );
+  return <article className={styles.article}>{content}</article>;
 }
