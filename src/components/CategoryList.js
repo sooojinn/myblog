@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getCategoryList } from "/lib/posts";
 import styles from "@/styles/CategoryList.module.css";
 import { CountPosts } from "/lib/posts";
+import { changeCategoryName } from "../../lib/posts";
 
 export default function CategoryList({ currentCategory }) {
   const categoryList = getCategoryList();
@@ -16,7 +17,7 @@ export default function CategoryList({ currentCategory }) {
             className={currentCategory == category ? styles.active : ""}
             key={category}
           >
-            {category || "all"} ({CountPosts(category)})
+            {changeCategoryName(category || "all")} ({CountPosts(category)})
           </Link>
         );
       })}

@@ -3,6 +3,12 @@
   grid-template-columns: 150px auto;
 }
 
+@media screen and (max-width: 500px) {
+  .page {
+    display: block;
+  }
+}
+
 .postList {
   list-style: none;
 }
@@ -21,4 +27,23 @@
 
 .date {
   font-size: 0.9rem;
+}
+
+.pageBtns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pageBtn {
+  background-color: transparent;
+  border: none;
+  padding: 7px 10px;
+  cursor: pointer;
+  color: inherit;
+}
+
+.pageBtn:hover,
+.selected {
+  background-color: #d3d3d3;
 }

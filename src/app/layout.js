@@ -1,13 +1,13 @@
 import { Inter } from "next/font/google";
 import "@/styles/globals.css";
 import Header from "@/components/Header";
-import CategoryList from "@/components/CategoryList.js";
+import { blogDesc, blogName } from "@/config/const";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Soojin",
-  description: "박수진 개발 블로그",
+  title: blogName,
+  description: blogDesc,
 };
 
 export default function RootLayout({ children }) {
