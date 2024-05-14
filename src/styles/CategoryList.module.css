@@ -16,6 +16,8 @@
 
 @media screen and (max-width: 500px) {
   .nav {
-    display: none;
+    flex-direction: row;
+    gap: 15px;
+    margin-bottom: 15px;
   }
 }
