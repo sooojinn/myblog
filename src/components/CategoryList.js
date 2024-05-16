@@ -14,7 +14,9 @@ export default function CategoryList({
           return (
             <Link
               href={`/posts/${category === "all" ? "" : category}`}
-              className={currentCategory == category ? styles.active : ""}
+              className={
+                (currentCategory || "all") == category ? styles.active : ""
+              }
               key={category}
             >
               {renderedCategory}
