@@ -1,3 +1,3 @@
-export const blogName = "Soojin.dev";
+export const BLOG_NAME = "Soojin.dev";
 
-export const blogDesc = "박수진 개발 블로그";
+export const BLOG_DESC = "박수진 개발 블로그";

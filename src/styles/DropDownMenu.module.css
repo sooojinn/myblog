@@ -1,0 +1,55 @@
+.nav {
+  display: none;
+}
+
+@media screen and (max-width: 500px) {
+  .nav {
+    display: block;
+  }
+}
+
+.dropDown {
+  background-color: transparent;
+  width: 130px;
+  border: 1px solid #dbdbdb;
+  border-radius: 4px;
+  padding: 7px;
+  margin-bottom: 10px;
+}
+
+.dropDownLabel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.dropDownOptions {
+  display: none;
+  flex-direction: column;
+  margin-top: 7px;
+  font-size: 0.9rem;
+}
+
+.opened {
+  display: flex;
+}
+
+.opened .arrow {
+  transform: rotate(0);
+}
+
+.arrow {
+  font-size: 0.8rem;
+  transform: rotate(180deg);
+  transition: transform 0.2s ease;
+}
+
+.option {
+  padding: 4px 7px;
+}
+
+.option:hover,
+.option.selected {
+  background-color: #dbdbdb;
+}

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import styles from "@/styles/PostListPage.module.css";
 
-const POST_PER_PAGE = 2;
+const POST_PER_PAGE = 10;
 
 export default function PostList({ postList }) {
   const totalPage = Math.ceil(postList.length / POST_PER_PAGE);
@@ -13,8 +13,6 @@ export default function PostList({ postList }) {
   const startIndex = POST_PER_PAGE * (currentPage - 1);
   const endIndex = startIndex + POST_PER_PAGE;
   const postListInPage = postList.slice(startIndex, endIndex);
-
-  console.log(currentPage);
 
   const pageNumList = [];
   for (let i = 1; i <= totalPage; i++) {
