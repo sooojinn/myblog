@@ -5,11 +5,11 @@
 
 .article h1 {
   line-height: 2;
-  margin-top: 1em;
 }
 
 .article h2 {
   line-height: 1.9;
+  margin-top: 1em;
 }
 
 .article h3 {
@@ -48,6 +48,7 @@
   padding: 1em;
   border-radius: 5px;
   margin-bottom: 1em;
+  overflow: auto;
 }
 
 .article img {
