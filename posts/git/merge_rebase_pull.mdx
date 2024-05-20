@@ -12,8 +12,8 @@ merge 전략에는 크게 두 가지가 있다.
 
 - Fast-forward 병합은 주로 간단한 경우에 사용된다. 이 경우에는 한 브랜치가 다른 브랜치보다 앞서 있는 경우에만 사용된다.
 - 병합이 필요 없이 다른 브랜치를 따라갈 수 있기 때문에 실제로는 새로운 커밋을 만들지 않고도 브랜치를 이동할 수 있다.
-- **git merge -ff-only [branch]**: Fast-forward 병합만을 허용한다. 만약 Fast-forward 병합이 불가능할 경우 병합을 거부한다.
-- **git merge --no-ff [branch]:** Fast-forward 병합을 강제로 막고 새로운 머지 커밋을 생성한다.
+- **`git merge -ff-only [branch]`**: Fast-forward 병합만을 허용한다. 만약 Fast-forward 병합이 불가능할 경우 병합을 거부한다.
+- **`git merge --no-ff [branch]`:** Fast-forward 병합을 강제로 막고 새로운 머지 커밋을 생성한다.
 
 ![fast-forward.png](/posts/git/merge_rebase_pull/fast-forward.png)
 

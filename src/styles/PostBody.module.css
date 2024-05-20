@@ -54,3 +54,10 @@
 .article img {
   max-width: 100%;
 }
+
+.article code:not(pre code) {
+  background-color: #ededed;
+  color: #eb5757;
+  padding: 0.2em 0.4em;
+  border-radius: 2px;
+}
