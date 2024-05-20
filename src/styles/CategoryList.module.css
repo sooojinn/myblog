@@ -6,12 +6,9 @@
   gap: 5px;
 }
 
-.nav a:hover {
-  text-decoration: underline;
-}
-
+.nav a:hover,
 .active {
-  text-decoration: underline;
+  color: #7eafcf;
 }
 
 @media screen and (max-width: 500px) {
