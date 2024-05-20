@@ -7,6 +7,12 @@ import { Gothic_A1 } from "next/font/google";
 export const metadata = {
   title: BLOG_NAME,
   description: BLOG_DESC,
+  openGraph: {
+    title: BLOG_NAME,
+    description: BLOG_DESC,
+    siteName: BLOG_NAME,
+    type: "website",
+  },
 };
 
 const gothic = Gothic_A1({
