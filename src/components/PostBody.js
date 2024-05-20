@@ -1,12 +1,23 @@
+import { MDXRemote } from "next-mdx-remote/rsc";
+import rehypePrettyCode from "rehype-pretty-code";
+import rehypeSlug from "rehype-slug";
+import remarkBreaks from "remark-breaks";
 import styles from "@/styles/PostBody.module.css";
-import { compileMDX } from "next-mdx-remote/rsc";
 
-export default async function PostBody({ data }) {
-  const { content } = await compileMDX({
-    source: data,
-    options: { parseFrontmatter: true },
-    compiledSource: "",
-  });
+const PostBody = ({ data }) => {
+  return (
+    <article className={styles.article}>
+      <MDXRemote
+        source={data}
+        options={{
+          mdxOptions: {
+            remarkPlugins: [remarkBreaks],
+            rehypePlugins: [[rehypePrettyCode], rehypeSlug],
+          },
+        }}
+      />
+    </article>
+  );
+};
 
-  return <article className={styles.article}>{content}</article>;
-}
+export default PostBody;
