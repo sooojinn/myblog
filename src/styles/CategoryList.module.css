@@ -3,12 +3,22 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 5px;
+  gap: 3px;
 }
 
-.nav a:hover,
+.nav a {
+  padding: 0.3em;
+}
+
+.nav a:hover {
+  background-color: #f1f1f1;
+  border-radius: 3px;
+}
+
 .active {
-  color: #7eafcf;
+  background-color: #7eafcf !important;
+  color: #fff;
+  border-radius: 3px;
 }
 
 @media screen and (max-width: 500px) {
