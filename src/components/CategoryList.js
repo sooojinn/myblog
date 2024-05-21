@@ -5,10 +5,11 @@ import styles from "@/styles/CategoryList.module.css";
 import { usePathname } from "next/navigation";
 
 export default function CategoryList({ renderedCategoryList }) {
-  const pathname = usePathname().split("/");
-  let currentCategory = pathname[pathname.length - 1];
+  const pathname = usePathname();
+  const pathParameters = pathname.split("/");
+  let currentCategory = pathParameters[2];
 
-  if (currentCategory === "posts") {
+  if (pathname === "/posts") {
     currentCategory = "all";
   }
 
