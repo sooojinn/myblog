@@ -39,3 +39,14 @@
 .active {
   border-bottom: #7eafcf 3px solid;
 }
+
+@media screen and (max-width: 500px) {
+  .container {
+    height: 110px;
+    padding-bottom: 30px;
+  }
+
+  .nav a {
+    height: 30px;
+  }
+}
