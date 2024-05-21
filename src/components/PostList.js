@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import styles from "@/styles/PostListPage.module.css";
 
-const POST_PER_PAGE = 10;
+const POST_PER_PAGE = 2;
 
 export default function PostList({ postList }) {
   const totalPage = Math.ceil(postList.length / POST_PER_PAGE);
@@ -39,7 +39,7 @@ export default function PostList({ postList }) {
       <ul className={styles.postList}>
         {postListInPage.map((post) => (
           <Link href={post.url} className={styles.post} key={post.slug}>
-            <h4>{post.title}</h4>
+            <h3>{post.title}</h3>
             <p className={styles.desc}>{post.desc}</p>
             <p className={styles.date}>{post.date}</p>
           </Link>
@@ -51,7 +51,7 @@ export default function PostList({ postList }) {
           onClick={handlePrevBtn}
           disabled={isPrevBtnDisabled}
         >
-          이전
+          〈
         </button>
         {pageNumList.map((pageNum) => (
           <button
@@ -70,7 +70,7 @@ export default function PostList({ postList }) {
           onClick={handleNextBtn}
           disabled={isNextBtnDisabled}
         >
-          다음
+          〉
         </button>
       </div>
     </section>

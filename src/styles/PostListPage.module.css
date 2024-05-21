@@ -1,5 +1,7 @@
 .page {
   display: grid;
+  flex: 1;
+  height: 100%;
   grid-template-columns: 150px auto;
 }
 
@@ -7,14 +9,19 @@
   display: none;
 }
 
+.postList {
+  list-style: none;
+  padding: 4vh 0 4vh 3vw;
+}
+
 @media screen and (max-width: 500px) {
   .page {
     display: block;
   }
-}
 
-.postList {
-  list-style: none;
+  .postList {
+    padding: 10px 0;
+  }
 }
 
 .post {
@@ -37,17 +44,31 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 15px;
+  margin-bottom: 70px;
 }
 
 .pageBtn {
   background-color: transparent;
   border: none;
-  padding: 7px 10px;
   cursor: pointer;
-  color: inherit;
+  color: #999999;
+}
+
+.pageBtn:first-child,
+.pageBtn:last-child {
+  border: #e4e4e4 1px solid;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
 }
 
 .pageBtn:hover,
 .selected {
   color: #7eafcf;
+}
+
+.pageBtn:disabled {
+  color: #999999;
+  cursor: default;
 }

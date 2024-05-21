@@ -4,6 +4,9 @@
   justify-content: flex-start;
   align-items: flex-start;
   gap: 3px;
+  height: 100%;
+  padding-top: 4vh;
+  border-right: #eeeeee 1px solid;
 }
 
 .nav a {

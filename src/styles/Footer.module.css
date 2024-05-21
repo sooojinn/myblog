@@ -3,5 +3,6 @@
   justify-content: center;
   align-items: center;
   height: 100px;
-  margin-top: 50px;
+  border-top: #eeeeee 1px solid;
+  font-size: 0.9rem;
 }

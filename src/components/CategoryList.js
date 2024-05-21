@@ -7,23 +7,21 @@ export default function CategoryList({
   renderedCategoryList,
 }) {
   return (
-    <>
-      <nav className={styles.nav}>
-        {renderedCategoryList.map((renderedCategory) => {
-          const category = renderedCategory.split(" ")[0].toLowerCase();
-          return (
-            <Link
-              href={`/posts/${category === "all" ? "" : category}`}
-              className={
-                (currentCategory || "all") == category ? styles.active : ""
-              }
-              key={category}
-            >
-              {renderedCategory}
-            </Link>
-          );
-        })}
-      </nav>
-    </>
+    <nav className={styles.nav}>
+      {renderedCategoryList.map((renderedCategory) => {
+        const category = renderedCategory.split(" ")[0].toLowerCase();
+        return (
+          <Link
+            href={`/posts/${category === "all" ? "" : category}`}
+            className={
+              (currentCategory || "all") == category ? styles.active : ""
+            }
+            key={category}
+          >
+            {renderedCategory}
+          </Link>
+        );
+      })}
+    </nav>
   );
 }
