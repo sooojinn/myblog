@@ -6,7 +6,8 @@
   gap: 3px;
   height: 100%;
   padding-top: 4vh;
-  border-right: #eeeeee 1px solid;
+  padding-left: 3vw;
+  border-left: #eeeeee 1px solid;
 }
 
 .nav a {
@@ -24,7 +25,7 @@
   border-radius: 3px;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 700px) {
   .nav {
     display: none;
   }

@@ -1,5 +1,3 @@
-import styles from "@/styles/PostListPage.module.css";
-import CategoryList from "./CategoryList";
 import PostList from "./PostList";
 import { getSortedPostList } from "/lib/posts";
 import { getRenderedCategoryList } from "/lib/posts";
@@ -10,11 +8,7 @@ export default function PostListPage({ category }) {
   const renderedCategoryList = getRenderedCategoryList();
 
   return (
-    <section className={styles.page}>
-      <CategoryList
-        currentCategory={category}
-        renderedCategoryList={renderedCategoryList}
-      />
+    <section>
       <DropDownMenu
         currentCategory={category}
         renderedCategoryList={renderedCategoryList}

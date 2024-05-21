@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import styles from "@/styles/PostListPage.module.css";
+import styles from "@/styles/PostList.module.css";
 
-const POST_PER_PAGE = 2;
+const POST_PER_PAGE = 10;
 
 export default function PostList({ postList }) {
   const totalPage = Math.ceil(postList.length / POST_PER_PAGE);

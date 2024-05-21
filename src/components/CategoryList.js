@@ -1,11 +1,17 @@
+"use client";
+
 import Link from "next/link";
 import styles from "@/styles/CategoryList.module.css";
-import { changeCategoryName } from "/lib/posts";
+import { usePathname } from "next/navigation";
 
-export default function CategoryList({
-  currentCategory,
-  renderedCategoryList,
-}) {
+export default function CategoryList({ renderedCategoryList }) {
+  const pathname = usePathname().split("/");
+  let currentCategory = pathname[pathname.length - 1];
+
+  if (currentCategory === "posts") {
+    currentCategory = "all";
+  }
+
   return (
     <nav className={styles.nav}>
       {renderedCategoryList.map((renderedCategory) => {
@@ -13,9 +19,7 @@ export default function CategoryList({
         return (
           <Link
             href={`/posts/${category === "all" ? "" : category}`}
-            className={
-              (currentCategory || "all") == category ? styles.active : ""
-            }
+            className={currentCategory === category ? styles.active : ""}
             key={category}
           >
             {renderedCategory}

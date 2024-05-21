@@ -2,7 +2,7 @@
   display: none;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 700px) {
   .nav {
     display: block;
     margin-top: 20px;

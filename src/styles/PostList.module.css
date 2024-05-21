@@ -1,20 +1,13 @@
-.page {
-  display: grid;
-  flex: 1;
-  height: 100%;
-  grid-template-columns: 150px auto;
-}
-
 .dropDown {
   display: none;
 }
 
 .postList {
   list-style: none;
-  padding: 4vh 0 4vh 3vw;
+  padding: 4vh 3vw 4vh 0;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 700px) {
   .page {
     display: block;
   }
@@ -31,13 +24,14 @@
 }
 
 .desc {
-  color: #c2c2c2;
+  color: #9d9d9d;
   font-size: 0.9rem;
   margin: 0.4em 0;
 }
 
 .date {
   font-size: 0.9rem;
+  color: #9d9d9d;
 }
 
 .pageBtns {

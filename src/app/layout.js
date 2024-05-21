@@ -3,6 +3,8 @@ import Header from "@/components/Header";
 import { BLOG_NAME, BLOG_DESC } from "@/config/const";
 import Footer from "@/components/Footer";
 import { Gothic_A1 } from "next/font/google";
+import { getRenderedCategoryList } from "/lib/posts";
+import Aside from "@/components/Aside";
 
 export const metadata = {
   title: BLOG_NAME,
@@ -25,7 +27,10 @@ export default function RootLayout({ children }) {
     <html lang="ko">
       <body className={gothic.className}>
         <Header />
-        <main>{children}</main>
+        <main>
+          {children}
+          <Aside />
+        </main>
         <Footer />
       </body>
     </html>
