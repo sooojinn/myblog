@@ -16,7 +16,9 @@ export default function Header() {
           <h1>{BLOG_NAME}</h1>
         </Link>
         <div className={styles.icons}>
-          <Link href="https://github.com/sooojinn">GitHub</Link>
+          <Link href="https://github.com/sooojinn">
+            <Image src="/gitHub_icon.png" alt="GitHub" width={30} height={30} />
+          </Link>
         </div>
         <nav className={styles.nav}>
           <Link
