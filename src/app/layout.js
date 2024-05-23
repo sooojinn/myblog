@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import { BLOG_NAME, BLOG_DESC } from "@/config/const";
 import Footer from "@/components/Footer";
 import { Gothic_A1 } from "next/font/google";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 export const metadata = {
   title: BLOG_NAME,
@@ -24,9 +25,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ko">
       <body className={gothic.className}>
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <ThemeProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

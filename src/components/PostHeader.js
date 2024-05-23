@@ -8,6 +8,7 @@ export default function PostHeader({ data }) {
         <p className={styles.desc}>{data.desc}</p>
         <p className={styles.date}>{data.date}</p>
       </header>
+      <hr />
     </>
   );
 }
