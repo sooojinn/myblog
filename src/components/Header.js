@@ -18,7 +18,7 @@ export default function Header() {
         </Link>
         <div className={styles.icons}>
           <Link href="https://github.com/sooojinn">
-            <Image src="/github_icon.png" alt="GitHub" width={30} height={30} />
+            <div className={styles.githubIcon}></div>
           </Link>
           <ThemeToggle />
         </div>

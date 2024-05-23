@@ -11,3 +11,8 @@
   font-size: 0.9rem;
   margin-bottom: 30px;
 }
+
+:global(.dark) .desc,
+:global(.dark) .date {
+  color: #9d9d9d;
+}

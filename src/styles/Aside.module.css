@@ -1,4 +1,9 @@
 .aside {
-  border-left: #eeeeee 1px solid;
+  display: flex;
+  height: 100%;
+}
+
+.aside hr {
+  width: 1px;
   height: 100%;
 }

@@ -16,6 +16,17 @@
   gap: 15px;
 }
 
+.githubIcon {
+  background-image: url("/github_icon.png");
+  width: 30px;
+  height: 30px;
+  background-size: contain;
+}
+
+:global(.dark) .githubIcon {
+  background-image: url("/github_icon_white.png");
+}
+
 .nav {
   display: flex;
   justify-content: center;

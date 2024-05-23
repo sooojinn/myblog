@@ -33,6 +33,12 @@
   margin-bottom: 0.5em;
 }
 
+:global(.dark) .article p,
+:global(.dark) .article ul li,
+:global(.dark) .article ol li {
+  color: #ccd0d5;
+}
+
 .article li > p {
   margin-bottom: 1em;
 }
@@ -61,4 +67,9 @@
   color: #eb5757;
   padding: 0.2em 0.4em;
   border-radius: 2px;
+}
+
+:global(.dark) .article code:not(pre code) {
+  background-color: #4b5563;
+  color: #fff;
 }

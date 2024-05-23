@@ -7,6 +7,7 @@ export default function Aside() {
 
   return (
     <aside className={styles.aside}>
+      <hr />
       <CategoryList renderedCategoryList={renderedCategoryList} />
     </aside>
   );

@@ -10,17 +10,20 @@
 
 .nav a {
   padding: 0.3em;
+  border-radius: 3px;
 }
 
 .nav a:hover {
   background-color: #f1f1f1;
-  border-radius: 3px;
+}
+
+:global(.dark) .nav a:hover {
+  background-color: #373737;
 }
 
 .active {
   background-color: #7eafcf !important;
   color: #fff;
-  border-radius: 3px;
 }
 
 @media screen and (max-width: 700px) {
