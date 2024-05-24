@@ -19,6 +19,11 @@
   position: relative;
 }
 
+:global(.dark) .dropDown {
+  background-color: #373737;
+  border: none;
+}
+
 .dropDownLabel {
   display: flex;
   justify-content: space-between;
@@ -29,7 +34,7 @@
 .dropDownOptions {
   display: none;
   flex-direction: column;
-  background-color: #fafafa;
+  background-color: #fff;
   font-size: 0.9rem;
   padding: 7px;
   border: 1px solid #dbdbdb;
@@ -39,6 +44,13 @@
   position: absolute;
   right: -1px;
   left: -1px;
+}
+
+:global(.dark) .dropDownOptions {
+  background-color: #373737;
+  border: none;
+  right: 0;
+  left: 0;
 }
 
 .opened.dropDownOptions {
@@ -62,4 +74,9 @@
 .option:hover,
 .option.selected {
   background-color: #dbdbdb;
+}
+
+:global(.dark) .option:hover,
+:global(.dark) .option.selected {
+  background-color: #9d9d9d;
 }
