@@ -4,7 +4,7 @@ import rehypeSlug from "rehype-slug";
 import remarkBreaks from "remark-breaks";
 import styles from "@/styles/PostBody.module.css";
 
-const PostBody = ({ data }) => {
+export default function PostBody({ data }) {
   return (
     <article className={styles.article}>
       <MDXRemote
@@ -18,6 +18,4 @@ const PostBody = ({ data }) => {
       />
     </article>
   );
-};
-
-export default PostBody;
+}
