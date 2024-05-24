@@ -11,8 +11,8 @@ export default function PostDetail({ params: { category, slug } }) {
   return (
     <section>
       <PostHeader data={postMetaData} />
-      <PostBody data={postMainText} />
       <TableOfContent data={postMainText} />
+      <PostBody data={postMainText} />
     </section>
   );
 }

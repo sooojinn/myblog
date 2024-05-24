@@ -4,28 +4,57 @@
   right: 5vw;
   transform: translate(0, -50%);
   line-height: 2;
-  border-left: #f0f3f5 2px solid;
-  padding-left: 10px;
 }
 
 .heading {
   list-style: none;
   color: #b0b6bb;
-  padding-left: 5px;
+  padding-left: 1em;
+  border-left: #f0f3f5 3px solid;
 }
 
 .heading:hover {
-  color: #000000;
+  color: #4d5156;
 }
 
 .heading.current {
   background-color: #f2f2f2;
+  color: #4d5156;
+  border-left: #7eafcf 3px solid;
+}
+
+@media screen and (max-width: 1400px) {
+  .toc {
+    position: static;
+    transform: none;
+    border-bottom: #eeeeee 1px solid;
+  }
+
+  .headings {
+    margin-bottom: 30px;
+  }
+
+  .heading {
+    color: #4d5156;
+    border: none;
+    font-size: 1.1em;
+  }
+
+  .heading:hover {
+    color: #7eafcf;
+    text-decoration: underline;
+  }
+
+  .heading.current {
+    background-color: transparent;
+    border-left: none;
+  }
 }
 
 .toc-level-1 {
-  padding-left: 1em;
+  padding-left: 2em;
 }
 
 .toc-level-2 {
-  padding-left: 2em;
+  padding-left: 3em;
 }
