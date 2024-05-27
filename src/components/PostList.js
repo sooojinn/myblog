@@ -45,34 +45,38 @@ export default function PostList({ postList }) {
           </Link>
         ))}
       </ul>
-      <div className={styles.pageBtns}>
-        <button
-          className={styles.pageBtn}
-          onClick={handlePrevBtn}
-          disabled={isPrevBtnDisabled}
-        >
-          〈
-        </button>
-        {pageNumList.map((pageNum) => (
+      {totalPage ? (
+        <div className={styles.pageBtns}>
           <button
-            className={
-              styles.pageBtn +
-              (currentPage === pageNum ? ` ${styles.selected}` : "")
-            }
-            onClick={() => handlePageChange(pageNum)}
-            key={pageNum}
+            className={styles.pageBtn}
+            onClick={handlePrevBtn}
+            disabled={isPrevBtnDisabled}
           >
-            {pageNum}
+            〈
           </button>
-        ))}
-        <button
-          className={styles.pageBtn}
-          onClick={handleNextBtn}
-          disabled={isNextBtnDisabled}
-        >
-          〉
-        </button>
-      </div>
+          {pageNumList.map((pageNum) => (
+            <button
+              className={
+                styles.pageBtn +
+                (currentPage === pageNum ? ` ${styles.selected}` : "")
+              }
+              onClick={() => handlePageChange(pageNum)}
+              key={pageNum}
+            >
+              {pageNum}
+            </button>
+          ))}
+          <button
+            className={styles.pageBtn}
+            onClick={handleNextBtn}
+            disabled={isNextBtnDisabled}
+          >
+            〉
+          </button>
+        </div>
+      ) : (
+        <p style={{ textAlign: "center" }}>등록된 포스트가 없습니다.</p>
+      )}
     </section>
   );
 }
