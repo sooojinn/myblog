@@ -8,23 +8,26 @@ import { useEffect, useState } from "react";
 export default function TableOfContent({ data }) {
   const slugger = new GithubSlugger();
   const headings = data.split("\n").filter((str) => str.match(/^#+/));
-  const [currentHeading, setCurrentHeading] = useState(null);
+  const [currentHeading, setCurrentHeading] = useState([]);
 
   useEffect(() => {
     const observerOptions = {
       root: null, // 기본값, 뷰포트 기준
-      rootMargin: "0px", // root의 범위를 확장하거나 축소할 수 있다
-      threshold: 0.4, // 타겟이 40% 이상 보여질 때 실행
+      rootMargin: "-20px 0px", // root의 범위를 확장하거나 축소할 수 있다
+      threshold: 0, // 타겟이 40% 이상 보여질 때 실행
     };
 
     // 타겟이 최초 등록될 시 그리고 가시성에 변화가 생길 시 실행되는 콜백
     const observerCallback = (entries) => {
       entries.forEach((entry) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setCurrentHeading(entry.target.id);
-          }
-        });
+        const targetId = entry.target.id;
+        if (entry.isIntersecting) {
+          setCurrentHeading((prev) => [...prev, targetId]);
+        } else {
+          setCurrentHeading((prev) => {
+            return prev.filter((elem) => elem !== targetId);
+          });
+        }
       });
     };
 
@@ -57,7 +60,7 @@ export default function TableOfContent({ data }) {
             <li
               key={headingLink}
               className={`${styles[`toc-level-${level}`]} ${
-                currentHeading === headingLink ? styles.current : ""
+                currentHeading.includes(headingLink) ? styles.current : ""
               } ${styles.heading}`}
             >
               <Link href={`#${headingLink}`}>{headingText}</Link>
