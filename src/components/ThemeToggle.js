@@ -6,8 +6,7 @@ import { HiOutlineSun, HiOutlineMoon } from "react-icons/hi2";
 import styles from "@/styles/ThemeToggle.module.css";
 
 export default function ThemeToggle() {
-  const { systemTheme, theme, setTheme } = useTheme();
-  const currentTheme = theme === "system" ? systemTheme : theme;
+  const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -16,7 +15,7 @@ export default function ThemeToggle() {
 
   if (!mounted) return null;
 
-  return mounted && currentTheme === "dark" ? (
+  return mounted && theme === "dark" ? (
     <button className={styles.toggleBtn} onClick={() => setTheme("light")}>
       <HiOutlineSun size={20} />
     </button>
