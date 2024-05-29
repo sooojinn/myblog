@@ -3,28 +3,18 @@
   margin-bottom: 100px;
 }
 
-.article h1 {
-  line-height: 2;
+.article > * {
   margin-top: 1em;
-}
-
-.article h2 {
-  line-height: 1.9;
-}
-
-.article h3 {
-  line-height: 1.8;
+  margin-bottom: 0.5em;
 }
 
 .article p {
   line-height: 1.7;
-  margin-bottom: 2em;
 }
 
 .article ul,
 .article ol {
-  padding-left: 1.5em;
-  margin-bottom: 2em;
+  padding-left: 2em;
 }
 
 .article ul li,
@@ -54,8 +44,8 @@
   padding: 1em;
   border-radius: 5px;
   margin-bottom: 1em;
-  white-space: pre;
   overflow-x: auto;
+  white-space: pre;
 }
 
 .article img {
@@ -65,11 +55,19 @@
 .article code:not(pre code) {
   background-color: #ededed;
   color: #eb5757;
-  padding: 0.2em 0.4em;
-  border-radius: 2px;
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
 }
 
 :global(.dark) .article code:not(pre code) {
   background-color: #4b5563;
   color: #fff;
+}
+
+.article a {
+  color: #7eafcf;
+}
+
+.article a:hover {
+  text-decoration: underline;
 }
