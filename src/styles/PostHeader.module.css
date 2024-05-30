@@ -6,15 +6,12 @@
 
 .desc {
   margin: 10px 0;
+  color: var(--desc-color);
 }
 
 .date {
   font-size: 0.9rem;
-}
-
-:global(.dark) .desc,
-:global(.dark) .date {
-  color: #9d9d9d;
+  color: var(--date-color);
 }
 
 .line {

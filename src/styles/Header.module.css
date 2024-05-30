@@ -44,7 +44,7 @@
 }
 
 .active {
-  border-bottom: #7eafcf 3px solid;
+  border-bottom: var(--main) 3px solid;
 }
 
 @media screen and (max-width: 500px) {

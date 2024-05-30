@@ -1,3 +1,43 @@
+:root {
+  --main: #7eafcf;
+  --background: #fff;
+  --foreground: #141414;
+  --hr: #eeeeee;
+  --category-hover: #f1f1f1;
+  --dropdown-bg: var(--background);
+  --dropdown-border: #dbdbdb;
+  --prose: var(--foreground);
+  --code-bg: #ededed;
+  --code-color: #eb5757;
+  --link-color: var(--main);
+  --desc-color: #9d9d9d;
+  --date-color: #9d9d9d;
+  --page-btn-color: #999999;
+  --page-move-btn-color: #e4e4e4;
+  --heading-color: #b0b6bb;
+  --toc-heading-hover: #4d5156;
+  --toc-current-index-bg: #f2f2f2;
+  --toc-current-index-color: #4d5156;
+}
+
+.dark {
+  --background: #141414;
+  --foreground: #fff;
+  --hr: #374151;
+  --category-hover: #373737;
+  --dropdown-bg: var(--background);
+  --dropdown-border: #373737;
+  --prose: #ccd0d5;
+  --code-bg: #232321;
+  --code-color: #eb5756;
+  --link-color: var(--main);
+  --desc-color: #9d9d9d;
+  --date-color: #9d9d9d;
+  --toc-heading-hover: #f2f2f2;
+  --toc-current-index-bg: #4d5156;
+  --toc-current-index-color: #f2f2f2;
+}
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -10,12 +50,9 @@ body {
   height: 100%;
   min-width: 320px;
   font-size: 15px;
+  background-color: var(--background);
+  color: var(--foreground);
   transition: background-color 0.2s ease-in, color 0.2s ease-in;
-}
-
-body.dark {
-  background-color: #141414;
-  color: #fff;
 }
 
 main {
@@ -46,14 +83,10 @@ a {
 }
 
 hr {
-  background-color: #eeeeee;
+  background-color: var(--hr);
   height: 1px;
   border: none;
   width: 100%;
-}
-
-html.dark hr {
-  background-color: #374151;
 }
 
 @media screen and (max-width: 500px) {

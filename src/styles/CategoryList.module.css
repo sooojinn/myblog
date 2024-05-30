@@ -14,15 +14,11 @@
 }
 
 .nav a:hover {
-  background-color: #f1f1f1;
-}
-
-:global(.dark) .nav a:hover {
-  background-color: #373737;
+  background-color: var(--category-hover);
 }
 
 .active {
-  background-color: #7eafcf !important;
+  background-color: var(--main) !important;
   color: #fff;
 }
 

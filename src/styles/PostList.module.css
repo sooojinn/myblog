@@ -24,14 +24,14 @@
 }
 
 .desc {
-  color: #9d9d9d;
+  color: var(--desc-color);
   font-size: 0.9rem;
   margin: 0.4em 0;
 }
 
 .date {
   font-size: 0.9rem;
-  color: #9d9d9d;
+  color: var(--date-color);
 }
 
 .pageBtns {
@@ -46,12 +46,12 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
-  color: #999999;
+  color: var(--page-btn-color);
 }
 
 .pageBtn:first-child,
 .pageBtn:last-child {
-  border: #e4e4e4 1px solid;
+  border: var(--page-move-btn-color) 1px solid;
   width: 25px;
   height: 25px;
   border-radius: 50%;
@@ -59,10 +59,10 @@
 
 .pageBtn:hover,
 .selected {
-  color: #7eafcf;
+  color: var(--main);
 }
 
 .pageBtn:disabled {
-  color: #999999;
+  color: var(--page-btn-color);
   cursor: default;
 }
