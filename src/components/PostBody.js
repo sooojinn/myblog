@@ -12,7 +12,10 @@ export default function PostBody({ data }) {
         options={{
           mdxOptions: {
             remarkPlugins: [remarkBreaks],
-            rehypePlugins: [[rehypePrettyCode], rehypeSlug],
+            rehypePlugins: [
+              [rehypePrettyCode, { theme: "dark-plus" }],
+              rehypeSlug,
+            ],
           },
         }}
       />
