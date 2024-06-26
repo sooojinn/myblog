@@ -6,7 +6,7 @@ import TableOfContent from "@/components/TableOfContent";
 import { getPostPaths } from "/lib/posts";
 
 export async function generateStaticParams() {
-  const postPaths = getPostPaths();
+  const postPaths = await getPostPaths();
   return postPaths.map((postPath) => {
     const [category, slug] = postPath.split("/").slice(-2);
     return { category, slug };

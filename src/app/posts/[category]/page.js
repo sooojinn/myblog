@@ -2,7 +2,7 @@ import PostListPage from "@/components/PostListPage";
 import { getCategoryList } from "/lib/posts";
 
 export async function generateStaticParams() {
-  const categories = getCategoryList();
+  const categories = await getCategoryList();
   return categories.map((category) => ({ category }));
 }
 
