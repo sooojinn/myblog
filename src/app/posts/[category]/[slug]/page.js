@@ -4,9 +4,9 @@ import { getPostMainText } from "/lib/posts";
 import PostBody from "@/components/PostBody";
 import TableOfContent from "@/components/TableOfContent";
 
-export default async function PostDetail({ params: { category, slug } }) {
-  const postMetaData = await getPostMetaData(category, slug);
-  const postMainText = await getPostMainText(category, slug);
+export default function PostDetail({ params: { category, slug } }) {
+  const postMetaData = getPostMetaData(category, slug);
+  const postMainText = getPostMainText(category, slug);
 
   return (
     <section>

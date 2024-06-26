@@ -5,9 +5,9 @@ import DropDownMenu from "./DropDownMenu";
 import Aside from "./Aside";
 import styles from "@/styles/PostListPage.module.css";
 
-export default async function PostListPage({ category }) {
-  const postList = await getSortedPostList(category);
-  const renderedCategoryList = await getRenderedCategoryList();
+export default function PostListPage({ category }) {
+  const postList = getSortedPostList(category);
+  const renderedCategoryList = getRenderedCategoryList();
 
   return (
     <section className={styles.section}>
