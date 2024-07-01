@@ -71,7 +71,7 @@ const headings = data.split("\n").filter((str) => str.match(/^#+/));
 
 이 포스트에서 다루지 않았지만 mdx 파일을 html 요소로 변환할 때 [rehype-slug](https://www.npmjs.com/package/rehype-slug)라는 라이브러리를 사용하여 각 `heading` 요소에 id를 부여했다. [GithubSlugger](https://www.npmjs.com/package/github-slugger/v/1.2.1) 라이브러리를 사용하면 `rehype-slug`로 설정한 id 값과 동일하게 텍스트를 URL 슬러그로 변환할 수 있다.
 
-```
+```jsx
 import GithubSlugger from "github-slugger";
 
 const slugger = new GithubSlugger();
@@ -281,4 +281,4 @@ export default function TableOfContent({ data }) {
 
 [IntersactionObserver](https://developer.mozilla.org/ko/docs/Web/API/IntersectionObserver)
 
-https://heropy.blog/2019/10/27/intersection-observer/
+https://heropy.blog/2019/10/27/intersection-observer/(https://heropy.blog/2019/10/27/intersection-observer/)
