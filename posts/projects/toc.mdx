@@ -8,6 +8,8 @@ desc: "IntersactionObserver 라이브러리를 사용해보자"
 
 scroll 이벤트를 사용하면 단시간에 수백, 수천 번의 이벤트가 호출될 수 있고 동기적으로 실행되기 때문에 성능상 문제가 발생할 수 있다. 그리고 특정 지점을 관찰하기 위해서는 [getBoundingClientRect()](https://developer.mozilla.org/ko/docs/Web/API/Element/getBoundingClientRect) 함수를 사용해야 하는데, 이 함수는 리플로우(reflow) 현상이 발생한다는 단점이 있다.
 
+---
+
 # IntersactionObserver 소개
 
 [IntersactionObserver](https://developer.mozilla.org/ko/docs/Web/API/IntersectionObserver)는 위와 같은 문제를 해결할 수 있다!
@@ -52,6 +54,8 @@ observer.observe(target);
 - **root**: 관찰할 뷰포트의 루트 요소. `null`이면 기본적으로 브라우저 뷰포트를 사용한다.
 - **rootMargin**: 루트 요소의 마진을 설정한다. CSS 문법을 따른다.
 - **threshold**: 관찰할 요소의 가시성 임계값을 배열로 설정할 수 있다. 예를 들어, `[0, 0.25, 0.5, 0.75, 1]`로 설정하면 요소가 0%, 25%, 50%, 75%, 100% 보일 때마다 콜백이 호출된다.
+
+---
 
 # TOC 만들기
 
@@ -106,6 +110,8 @@ const slugger = new GithubSlugger();
   });
 }
 ```
+
+---
 
 # IntersactionObserver 적용
 
@@ -197,6 +203,8 @@ const tags = document.querySelectorAll("h1, h2, h3");
 tags.forEach((tag) => observer.observe(tag));
 ```
 
+---
+
 # 전체 코드
 
 ```jsx
@@ -276,6 +284,8 @@ export default function TableOfContent({ data }) {
   );
 }
 ```
+
+---
 
 # 참고
 
