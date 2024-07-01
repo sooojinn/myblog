@@ -1,0 +1,284 @@
+---
+title: "Next.js 블로그 프로젝트 - TOC 기능 구현"
+date: "2024-05-25"
+desc: "IntersactionObserver 라이브러리를 사용해보자"
+---
+
+# scroll 이벤트로 직접 TOC를 구현할 때 생기는 문제
+
+scroll 이벤트를 사용하면 단시간에 수백, 수천 번의 이벤트가 호출될 수 있고 동기적으로 실행되기 때문에 성능상 문제가 발생할 수 있다. 그리고 특정 지점을 관찰하기 위해서는 [getBoundingClientRect()](https://developer.mozilla.org/ko/docs/Web/API/Element/getBoundingClientRect) 함수를 사용해야 하는데, 이 함수는 리플로우(reflow) 현상이 발생한다는 단점이 있다.
+
+# IntersactionObserver 소개
+
+[IntersactionObserver](https://developer.mozilla.org/ko/docs/Web/API/IntersectionObserver)는 위와 같은 문제를 해결할 수 있다!
+
+`IntersactionObserver`는 웹 브라우저 API 중 하나로, 요소가 뷰포트 또는 다른 요소 내에서 보이는지 여부를 비동기적으로 관찰하는 데 사용된다. 이 API는 웹 페이지의 스크롤이나 다른 레이아웃 변화에 반응하여 특정 요소가 화면에 나타날 때나 사라질 때, 또는 지정한 비율로 노출될 때 이벤트를 트리거할 수 있게 해준다.
+
+## 주요 기능
+
+1. **비동기 관찰**: `IntersectionObserver`는 비동기적으로 요소의 가시성을 관찰하며, 이는 성능에 영향을 덜 미치는 방식이다.
+2. **스크롤 및 리사이즈 이벤트 최적화**: 직접 스크롤 및 리사이즈 이벤트를 처리하는 것보다 더 효율적이다.
+3. **가시성 변화에 반응**: 요소가 뷰포트에 들어오거나 나갈 때, 또는 가시성 비율이 변경될 때 반응할 수 있다.
+
+## 사용 방법
+
+1. **IntersectionObserver 생성**: 콜백 함수와 옵션을 사용하여 `IntersectionObserver` 인스턴스를 생성한다.
+2. **관찰할 요소 등록**: `observe` 메서드를 사용하여 관찰할 요소를 등록한다.
+3. **옵션**: 옵션을 통해 관찰을 위한 루트 요소, 루트 마진, 그리고 임계값(가시성 비율)을 설정할 수 있다.
+
+```jsx
+// 1. IntersectionObserver 생성
+const options = {
+  root: null, // 뷰포트를 루트로 사용
+  rootMargin: "0px",
+  threshold: 0.5, // 50% 이상 보일 때 콜백 실행
+};
+
+const observer = new IntersectionObserver((entries, observer) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      console.log("Element is in view:", entry.target);
+    }
+  });
+}, options);
+
+// 2. 관찰할 요소 등록
+const target = document.querySelector(".target-element");
+observer.observe(target);
+```
+
+## 주요 옵션
+
+- **root**: 관찰할 뷰포트의 루트 요소. `null`이면 기본적으로 브라우저 뷰포트를 사용한다.
+- **rootMargin**: 루트 요소의 마진을 설정한다. CSS 문법을 따른다.
+- **threshold**: 관찰할 요소의 가시성 임계값을 배열로 설정할 수 있다. 예를 들어, `[0, 0.25, 0.5, 0.75, 1]`로 설정하면 요소가 0%, 25%, 50%, 75%, 100% 보일 때마다 콜백이 호출된다.
+
+# TOC 만들기
+
+`IntersectionObserver`를 적용하기 전 TOC부터 만들어보자.
+
+## heading 요소만 가져오기
+
+`TableOfContent` 컴포넌트의 상위 컴포넌트에서 mdx 파일을 파싱한 데이터를 data라는 props으로 내려줬었다. 즉, 마크다운 문법으로 작성한 텍스트 파일이 props로 내려오는 것이다.
+
+이 data 중에서 `heading` 요소만 가져와야 한다. 정규 표현식을 사용하여 필터링한다.
+
+```jsx
+const headings = data.split("\n").filter((str) => str.match(/^#+/));
+```
+
+## GithubSlugger 라이브러리 설치 및 불러오기
+
+이 포스트에서 다루지 않았지만 mdx 파일을 html 요소로 변환할 때 [rehype-slug](https://www.npmjs.com/package/rehype-slug)라는 라이브러리를 사용하여 각 `heading` 요소에 id를 부여했다. [GithubSlugger](https://www.npmjs.com/package/github-slugger/v/1.2.1) 라이브러리를 사용하면 `rehype-slug`로 설정한 id 값과 동일하게 텍스트를 URL 슬러그로 변환할 수 있다.
+
+```
+import GithubSlugger from "github-slugger";
+
+const slugger = new GithubSlugger();
+```
+
+## heading 요소 렌더링하기
+
+`href` 경로로 `# + id` 값을 설정하면 페이지 내 해당 요소로 이동한다. `Link` 컴포넌트로 목차 클릭 시 해당 목차로 이동하게 한다.
+
+```jsx
+{
+  headings.map((str) => {
+    // h1은 한 칸, h2는 두 칸, h3는 세 칸 들여쓰기
+    const level = str.match(/^#+/)[0].length - 1;
+
+    // #를 제거하고 텍스트만 추출
+    const headingText = str.replace(/^#+/, "");
+
+    // 텍스트를 URL 슬러그로 변환하기
+    const headingLink = slugger.slug(headingText.trim());
+
+    return (
+      <li
+        key={headingLink}
+        className={`${styles[`toc-level-${level}`]} ${
+          currentHeading === headingLink ? styles.current : ""
+        } ${styles.heading}`}
+      >
+        <Link href={`#${headingLink}`}>{headingText}</Link>
+      </li>
+    );
+  });
+}
+```
+
+# IntersactionObserver 적용
+
+## 옵션 설정
+
+```jsx
+const observerOptions = {
+  root: null,
+  rootMargin: "-20px 0px",
+  threshold: 1,
+};
+```
+
+## 콜백 함수 설정
+
+타겟 요소가 뷰포트의 루트 요소와 교차할 때마다 실행되는 콜백 함수이다.
+
+`entries`는 `IntersectionObserver`의 콜백 함수에 전달되는 매개변수로, 관찰 중인 요소들의 교차 상태를 나타내는 `IntersectionObserverEntry` 객체들의 배열이다. 각 `IntersectionObserverEntry` 객체는 관찰 중인 요소와 관련된 정보를 포함하고 있다.
+
+### IntersectionObserverEntry 객체의 주요 속성
+
+- **target**: 관찰 대상인 요소 (Element).
+- **isIntersecting**: 요소가 루트와 교차하고 있는지 여부 (boolean).
+- **intersectionRatio**: 요소가 루트와 교차한 비율 (number).
+- **intersectionRect**: 요소가 루트와 교차하는 부분의 직사각형 정보 (DOMRectReadOnly).
+- **boundingClientRect**: 요소의 경계 정보 (DOMRectReadOnly).
+- **rootBounds**: 루트 요소의 경계 정보 (DOMRectReadOnly).
+- **time**: 교차가 감지된 시간 (DOMHighResTimeStamp).
+
+여기서 `isIntersecting` 속성을 사용하여 요소가 루트와 교차하고 있으면 `currentHeading`값을 업데이트 한다.
+
+`currentHeading`은 현재 목차를 나타내는 state이다. css로 현재 목차를 표시할 때 비교되는 값이다.
+
+```jsx
+const [currentHeading, setCurrentHeading] = useState();
+
+const observerCallback = (entries) => {
+  entries.forEach((entry) => {
+    const targetId = entry.target.id;
+    if (entry.isIntersecting) {
+      setCurrentHeading(targetId);
+    }
+  });
+};
+```
+
+이렇게 코드를 짜니 교차 상태에 있는 요소가 없을 땐 `currentHeading` 값이 `null`이 되는 문제점이 있었다. `heading` 요소 아래 텍스트가 뷰포트 길이보다 길 때 발생한다. 스크롤을 내리다가 현재 목차 표시가 사라지면 사용자 경험이 떨어지기 때문에 마지막 교차 요소를 기억하는 방식으로 코드를 짰다.
+
+```jsx
+// 마지막으로 교차한 요소의 ID를 저장하는 변수를 초기화
+let lastIntersectingId = null;
+
+const observerCallback = (entries) => {
+  // 교차 상태가 변했는지 여부를 추적하는 변수를 초기화
+  let anyIntersecting = false;
+
+  entries.forEach((entry) => {
+    const targetId = entry.target.id;
+
+    if (entry.isIntersecting) {
+      // 요소가 교차하고 있을 때의 처리
+      lastIntersectingId = targetId; // 마지막으로 교차한 요소의 ID를 업데이트
+      anyIntersecting = true; // 교차하는 요소가 있음을 표시
+      setCurrentHeading(targetId);
+    }
+  });
+
+  // 교차하는 요소가 없을 때 lastIntersectingId를 currentHeading으로 설정
+  if (!anyIntersecting && lastIntersectingId) {
+    setCurrentHeading(lastIntersectingId);
+  }
+};
+```
+
+## IntersactionObserver 인스턴스 생성
+
+첫번째 인수로 콜백 함수를, 두번째 인수로 옵션 객체를 전달한다.
+
+```jsx
+const observer = new IntersectionObserver(observerCallback, observerOptions);
+```
+
+## 관찰 요소 등록
+
+`observe` 메서드로 관찰 요소를 등록한다.
+
+```jsx
+const tags = document.querySelectorAll("h1, h2, h3");
+tags.forEach((tag) => observer.observe(tag));
+```
+
+# 전체 코드
+
+```jsx
+"use client";
+
+import Link from "next/link";
+import GithubSlugger from "github-slugger";
+import styles from "@/styles/TableOfContent.module.css";
+import { useEffect, useState } from "react";
+
+export default function TableOfContent({ data }) {
+  const slugger = new GithubSlugger();
+  const headings = data.split("\n").filter((str) => str.match(/^#+/));
+  const [currentHeading, setCurrentHeading] = useState();
+
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: "-20px 0px",
+      threshold: 1,
+    };
+
+    let lastIntersectingId = null;
+
+    const observerCallback = (entries) => {
+      let anyIntersecting = false;
+
+      entries.forEach((entry) => {
+        const targetId = entry.target.id;
+
+        if (entry.isIntersecting) {
+          lastIntersectingId = targetId;
+          anyIntersecting = true;
+          setCurrentHeading(targetId);
+        }
+      });
+
+      if (!anyIntersecting && lastIntersectingId) {
+        setCurrentHeading(lastIntersectingId);
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      observerCallback,
+      observerOptions
+    );
+
+    const tags = document.querySelectorAll("h1, h2, h3");
+    tags.forEach((tag) => observer.observe(tag));
+
+    return () => {
+      tags.forEach((tag) => observer.unobserve(tag));
+    };
+  }, []);
+
+  return (
+    <div className={styles.toc}>
+      <h3>On This Page</h3>
+      <ul className={styles.headings}>
+        {headings.map((str) => {
+          const level = str.match(/^#+/)[0].length - 1;
+          const headingText = str.replace(/^#+/, "");
+          const headingLink = slugger.slug(headingText.trim());
+          return (
+            <li
+              key={headingLink}
+              className={`${styles[`toc-level-${level}`]} ${
+                currentHeading === headingLink ? styles.current : ""
+              } ${styles.heading}`}
+            >
+              <Link href={`#${headingLink}`}>{headingText}</Link>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+```
+
+# 참고
+
+[IntersactionObserver](https://developer.mozilla.org/ko/docs/Web/API/IntersectionObserver)
+
+https://heropy.blog/2019/10/27/intersection-observer/
