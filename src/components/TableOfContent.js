@@ -7,47 +7,43 @@ import { useEffect, useState } from "react";
 
 export default function TableOfContent({ data }) {
   const slugger = new GithubSlugger();
-  const headings = data.split("\n").filter((str) => str.match(/^#+/));
+  const headings = data
+    .split("\n")
+    .filter((str) => str.match(/^(#{1,3})\s.*$/));
   const [currentHeading, setCurrentHeading] = useState();
 
   useEffect(() => {
     const observerOptions = {
-      root: null, // 기본값, 뷰포트 기준
-      rootMargin: "-20px 0px", // root의 범위를 확장하거나 축소할 수 있다
-      threshold: 1, // 타겟이 40% 이상 보여질 때 실행
+      root: null,
+      rootMargin: "-20px 0px",
+      threshold: 1,
     };
 
-    // 마지막으로 교차한 요소의 ID를 저장하는 변수를 초기화합니다.
     let lastIntersectingId = null;
 
     const observerCallback = (entries) => {
-      // 교차 상태가 변했는지 여부를 추적하는 변수를 초기화합니다.
       let anyIntersecting = false;
 
       entries.forEach((entry) => {
         const targetId = entry.target.id;
 
         if (entry.isIntersecting) {
-          // 요소가 교차하고 있을 때의 처리
-          lastIntersectingId = targetId; // 마지막으로 교차한 요소의 ID를 업데이트
-          anyIntersecting = true; // 교차하는 요소가 있음을 표시
+          lastIntersectingId = targetId;
+          anyIntersecting = true;
           setCurrentHeading(targetId);
         }
       });
 
-      // 교차하는 요소가 없을 때 lastIntersectingId를 currentHeading으로 설정
       if (!anyIntersecting && lastIntersectingId) {
         setCurrentHeading(lastIntersectingId);
       }
     };
 
-    // new IntersectionObserver()를 통해 생성한 인스턴스로 관측자를 초기화
     const observer = new IntersectionObserver(
       observerCallback,
       observerOptions
     );
 
-    // 관측할 타겟들(섹션들)을 지정
     const tags = document.querySelectorAll("h1, h2, h3");
     tags.forEach((tag) => observer.observe(tag));
 
