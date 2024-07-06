@@ -1,7 +1,7 @@
 ---
 title: "Next.js 블로그 프로젝트 - TOC 기능 구현"
 date: "2024-05-25"
-desc: "IntersactionObserver 라이브러리를 사용해보자"
+desc: "IntersectionObserver 라이브러리를 사용해보자"
 ---
 
 # scroll 이벤트로 직접 TOC를 구현할 때 생기는 문제
@@ -10,11 +10,11 @@ scroll 이벤트를 사용하면 단시간에 수백, 수천 번의 이벤트가
 
 ---
 
-# IntersactionObserver 소개
+# IntersectionObserver 소개
 
-[IntersactionObserver](https://developer.mozilla.org/ko/docs/Web/API/IntersectionObserver)는 위와 같은 문제를 해결할 수 있다!
+[IntersectionObserver](https://developer.mozilla.org/ko/docs/Web/API/IntersectionObserver)는 위와 같은 문제를 해결할 수 있다!
 
-`IntersactionObserver`는 웹 브라우저 API 중 하나로, 요소가 뷰포트 또는 다른 요소 내에서 보이는지 여부를 비동기적으로 관찰하는 데 사용된다. 이 API는 웹 페이지의 스크롤이나 다른 레이아웃 변화에 반응하여 특정 요소가 화면에 나타날 때나 사라질 때, 또는 지정한 비율로 노출될 때 이벤트를 트리거할 수 있게 해준다.
+`IntersectionObserver`는 웹 브라우저 API 중 하나로, 요소가 뷰포트 또는 다른 요소 내에서 보이는지 여부를 비동기적으로 관찰하는 데 사용된다. 이 API는 웹 페이지의 스크롤이나 다른 레이아웃 변화에 반응하여 특정 요소가 화면에 나타날 때나 사라질 때, 또는 지정한 비율로 노출될 때 이벤트를 트리거할 수 있게 해준다.
 
 ## 주요 기능
 
@@ -113,7 +113,7 @@ const slugger = new GithubSlugger();
 
 ---
 
-# IntersactionObserver 적용
+# IntersectionObserver 적용
 
 ## 옵션 설정
 
@@ -186,7 +186,7 @@ const observerCallback = (entries) => {
 };
 ```
 
-## IntersactionObserver 인스턴스 생성
+## IntersectionObserver 인스턴스 생성
 
 첫번째 인수로 콜백 함수를, 두번째 인수로 옵션 객체를 전달한다.
 
@@ -289,6 +289,6 @@ export default function TableOfContent({ data }) {
 
 # 참고
 
-[IntersactionObserver](https://developer.mozilla.org/ko/docs/Web/API/IntersectionObserver)
+[IntersectionObserver](https://developer.mozilla.org/ko/docs/Web/API/IntersectionObserver)
 
 [https://heropy.blog/2019/10/27/intersection-observer/](https://heropy.blog/2019/10/27/intersection-observer/)
