@@ -6,7 +6,7 @@ import styles from "@/styles/PostList.module.css";
 
 const POST_PER_PAGE = 10;
 
-export default function PostList({ postList }) {
+export default function PostList({ renderedCategory, postList }) {
   const totalPage = Math.ceil(postList.length / POST_PER_PAGE);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -36,6 +36,7 @@ export default function PostList({ postList }) {
 
   return (
     <section>
+      <h2 className={styles.category}>{renderedCategory}</h2>
       <ul className={styles.postList}>
         {postListInPage.map((post) => (
           <Link href={post.url} className={styles.post} key={post.slug}>
