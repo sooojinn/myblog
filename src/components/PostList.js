@@ -39,7 +39,7 @@ export default function PostList({ postList }) {
       <ul className={styles.postList}>
         {postListInPage.map((post) => (
           <Link href={post.url} className={styles.post} key={post.slug}>
-            <h3>{post.title}</h3>
+            <h3 className={styles.title}>{post.title}</h3>
             <p className={styles.desc}>{post.desc}</p>
             <p className={styles.date}>{post.date}</p>
           </Link>
