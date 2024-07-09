@@ -1,0 +1,177 @@
+---
+title: "CORS가 무엇이고 프론트에서는 어떤 설정을 해야 할까?"
+date: "2024-07-07"
+desc: "CORS 에러 해결을 위해 고군분투한 기록"
+---
+
+프로젝트를 진행하던 중, CORS라는 아주 큰 산을 만났다.
+
+# CORS에 대해 알아보자
+
+## CORS란?
+
+CORS는 Cross-Origin Resource Sharing의 약자로, 교차 출처 리소스 공유를 의미한다. 웹 개발에서는 웹 페이지에서 다른 출처(도메인, 프로토콜, 포트)에 있는 리소스를 요청할 때 보안 상의 이유로 제한이 있는데, 이를 허용하기 위한 메커니즘이다.
+
+## CORS 작동 원리
+
+웹 브라우저는 기본적으로 Same-Origin Policy를 따라 동작한다. 이 정책에 따라 스크립트가 실행 중인 웹 페이지는 자신과 동일한 출처에서만 리소스를 로드할 수 있다. 출처란 프로토콜(http, https), 호스트(도메인), 포트를 포함한 주소를 말한다.
+
+하지만 많은 경우에는 다른 출처에 있는 리소스에 접근할 필요가 있다. 예를 들어, API 서버에 데이터를 요청하거나, 다른 도메인에 있는 이미지나 폰트를 로드해야 할 수 있다. 이 때 CORS 메커니즘이 사용된다.
+
+즉, http://localhost:8080에 있는 리소스를 http://localhost:3000에서 요청하면 출처가 다르기 때문에 보안 상의 이유로 제한되는데, 이를 허용해주는 것이 바로 CORS이다.
+
+---
+
+# CORS 동작 방식
+
+## 1. 예비 요청(Preflight Request)
+
+클라이언트가 다른 출처에 리소스를 요청할 때, 브라우저는 해당 요청에 대해 사전에 요청을 보낸다. 이를 예비 요청(Pre-flight) 요청이라고 한다. 실제 요청의 헤더와 메서드를 담아 보낸다.
+
+예비 요청의 목적은 서버가 실제 요청을 허용할지 확인하기 위함이다. 아래 그림을 보면 쉽게 이해할 수 있다. (예비 요청이 없는 Simple Request도 있는데, 이건 조건이 까다로워 대부분의 경우 예비 요청과 실제 요청이 나누어진다.)
+
+![preflight.png](/posts/web/about_cors/preflight.png)
+
+브라우저가 예비 요청을 보낼 때 `OPTIONS`라는 메서드를 사용하는데, 서버와 브라우저가 통신하기 위한 통신 옵션을 확인하기 위해 사용하는 메서드이다.(생각해보니 HTTP 요청에 대해 배울 때 들어본 것 같다!)
+
+`OPTIONS` 요청 구조는 예를 들면 다음과 같다. `Origin` 필드에 요청을 보낸 출처를 담아 보낸다.
+
+```html
+OPTIONS /data HTTP/1.1 Host: api.example.com Origin: https://example.com //
+요청을 보낸 출처(도메인) Access-Control-Request-Method: GET // 실제 요청에
+사용할 HTTP 메서드 Access-Control-Request-Headers: Content-Type // 실제 요청에
+사용할 커스텀 헤더
+```
+
+## 2. 예비 요청에 대한 응답
+
+서버는 `Access-Control-Allow-Origin` 헤더를 포함하여 브라우저에 응답한다. 이 헤더는 서버가 허용하는 출처를 나타낸다.
+
+```html
+HTTP/1.1 204 No Content Access-Control-Allow-Origin: http://example.com //
+요청을 허용할 도메인 Access-Control-Allow-Methods: POST, GET, OPTIONS // 실제
+요청에 허용되는 HTTP 메서드 Access-Control-Allow-Headers: X-Custom-Header,
+Content-Type // 실제 요청에 허용되는 헤더 목록 Access-Control-Max-Age: 86400 //
+브라우저가 예비 요청의 결과를 캐시할 수 있는 시간(초)
+```
+
+## 3. 보안 검사
+
+브라우저는 서버로부터 받은 `Access-Control-Allow-Origin` 헤더를 검사하여, 출처가 허용되었다면 실제 요청을 보내 리소스를 받아오고 사용자에게 보여준다. 출처가 허용되지 않았다면 에러가 발생하거나 리소스 접근이 차단된다.
+
+여기까지 이해했다면, 그럼 서버에서 `Access-Control-Allow-Origin`을 요청을 보낼 출처로 설정하면 되는구나! 라는 생각이 들 것이다.
+
+---
+
+# CORS 설정하는 법
+
+Spring에서 CORS를 설정한 예시이다. 프로젝트의 백엔드 코드를 가져왔다.
+
+아래처럼 요청을 허용할 도메인, 메서드, 헤더 등을 설정할 수 있다.
+
+```java
+public class CorsConfig implements WebMvcConfigurer {
+
+  @Override
+  public void addCorsMappings(CorsRegistry registry) {
+    registry.addMapping("/**") // 모든 경로에 대해
+            .allowedOrigins("http://localhost:3000") // 특정 도메인 허용
+            .allowedOriginPatterns("http://localhost:3000/**", "http://localhost:8080/**")
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP 메소드
+            .allowedHeaders("*") // 모든 헤더 허용
+            .allowCredentials(true) // 자격 증명 허용
+            .exposedHeaders("Set-Cookie") // 클라이언트에서 접근할 수 있는 헤더
+            .maxAge(3600); // pre-flight 요청 캐싱 시간
+  }
+}
+```
+
+여기서 주목해야 할 부분은 `allowCredentials` 메서드이다. CORS 보안을 강화하기 위한 설정인데, 이건 밑에서 설명하겠다.
+
+---
+
+# CORS 보안을 강화하는 법
+
+## Credentialed Request
+
+CORS 보안을 강화하기 위해, 요청에 **인증 정보(예: 쿠키, HTTP 인증 헤더, TLS 클라이언트 인증서)**를 포함할 수 있다. 이러한 요청을 처리하려면 서버와 클라이언트 모두 특정한 설정을 해야 한다.
+
+### 클라이언트 설정
+
+기본적으로 브라우저가 제공하는 비동기 리소스 요청 API인 `XMLHttpRequest` 객체나 `fetch` API는 별도의 옵션 없이 브라우저의 쿠키 정보나 인증과 관련된 헤더를 함부로 요청에 담지 않는다. 이때 요청에 인증과 관련된 정보를 담을 수 있게 해주는 옵션이 바로 `credentials` 옵션이다.
+
+이 옵션에는 세 가지의 값을 사용할 수 있다.
+
+1. same-origin (기본값): 같은 출처 간 요청에만 인증 정보를 담을 수 있다.
+2. include: 모든 요청에 인증 정보를 담을 수 있다.
+3. omit: 모든 요청에 인증 정보를 담지 않는다.
+
+`fetch` 함수에서는 이렇게 사용한다!
+
+이 설정을 해주지 않아 에러가 떴었고,,, 정말 삽질을 많이 했다. 서버에서 `Access-Control-Allow-Credentials` 를 `true`로 설정하지 않으면 프론트에서는 CORS를 위한 설정이 따로 필요하지 않다. 그러나 `true`로 설정해놓으면 프론트에서는 꼭 인증 정보를 담아 보내야 한다!
+
+```jsx
+export async function postBudget(data) {
+  const res = await fetch(baseUrl + `/budget`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+    credentials: "include", // 이렇게!!
+  });
+
+  return res;
+}
+```
+
+### 서버 설정
+
+서버에서는 `Access-Control-Allow-Credentials` 헤더를 `true`로 설정하여 자격 증명 포함 요청을 허용해야 한다.
+
+주의할 점은, 서버가 `Access-Control-Allow-Origin`을 설정할 때 와일드 카드(’_’)를 사용할 수 없으며, 특정 도메인을 명시해야 한다는 점이다. `Access-Control-Allow-Methods`, `Access-Control-Allow-Headers`도 마찬가지로 와일드 카드(’_’)를 사용할 수 없다.
+
+Spring에서는 `allowCredentials` 메서드를 써서 설정할 수 있다!
+
+```java
+public class CorsConfig implements WebMvcConfigurer {
+
+  @Override
+  public void addCorsMappings(CorsRegistry registry) {
+    registry.addMapping("/**") // 모든 경로에 대해
+            .allowedOrigins("http://localhost:3000") // 특정 도메인 허용
+            .allowedOriginPatterns("http://localhost:3000/**", "http://localhost:8080/**")
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP 메소드
+            .allowedHeaders("*") // 모든 헤더 허용
+            .allowCredentials(true) // 자격 증명 허용
+            .exposedHeaders("Set-Cookie") // 클라이언트에서 접근할 수 있는 헤더
+            .maxAge(3600); // pre-flight 요청 캐싱 시간
+  }
+}
+```
+
+중요한 것은 프론트, 백 양쪽에서 이 같은 설정을 해줘야 한다는 점이다. 그렇지 않으면 에러가 난다.
+
+---
+
+# CORS 에러 해결 과정
+
+CORS 에러 때문에 삽질을 많이 했었는데, 제대로 공부하고 나니 생각보다 어려운 게 아니었음을 깨달았다.
+
+삽질을 많이 한 이유는 콘솔에 CORS 에러가 뜨지 않고, `SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON` 라는 오류가 떴기 때문이다. 그래서 CORS 에러인지도 몰랐다. 포스트맨으로 확인해보니 서버가 로그인 페이지 html을 반환하고 있었다.
+
+왜 처음 보는 html을 반환하는지… 영문도 모른 채 이런 저런 시도를 해보며 맞춰봐도 아무 소용이 없었다.
+
+그러다가 프론트에서 요청을 보낼 때 `credentials: "include"` 설정을 하지 않았다는 것을 깨달았다…!! 이 옵션을 모든 api 요청에 추가하고 서버가 정상적으로 돌아가는 걸 확인했을 때 기쁘기도 했고 허무하기도 했다.
+
+알고 보니 스프링 시큐리티가 기본적으로 제공하는 로그인 페이지나 에러 페이지를 HTML 형식으로 반환하는 경우가 있다고 한다. (에러 케이스 적립!)
+
+CORS에 대해 이해하고 나니 웹에 대한 이해도도 높아져 뿌듯하다. CORS 에러는 백엔드에서 해결해야 한다고 생각하고 공부를 미루고 있던 것을 반성했다. 통신하는 부분에서 에러가 발생하면 그게 무엇이든 프론트도 적극적으로 해결하려고 노력해야 한다는 것을 깨달았다.
+
+---
+
+# 참고
+
+[https://evan-moon.github.io/2020/05/21/about-cors/](https://evan-moon.github.io/2020/05/21/about-cors/)
+
+[https://inpa.tistory.com/entry/AXIOS-📚-CORS-쿠키-전송withCredentials-옵션](https://inpa.tistory.com/entry/AXIOS-%F0%9F%93%9A-CORS-%EC%BF%A0%ED%82%A4-%EC%A0%84%EC%86%A1withCredentials-%EC%98%B5%EC%85%98)
