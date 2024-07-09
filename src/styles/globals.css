@@ -22,6 +22,7 @@
 }
 
 .dark {
+  --main: #74b5d8;
   --background: #141414;
   --foreground: #fff;
   --hr: #374151;
@@ -32,6 +33,7 @@
   --code-bg: #232321;
   --code-color: #eb5756;
   --link-color: var(--main);
+  --post-hover: #222222;
   --desc-color: #9d9d9d;
   --date-color: #9d9d9d;
   --toc-heading-hover: #f2f2f2;
