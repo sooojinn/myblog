@@ -15,7 +15,7 @@ export default function TableOfContent({ data }) {
   useEffect(() => {
     const observerOptions = {
       root: null,
-      rootMargin: "-20px 0px",
+      rootMargin: "-20px 0px -350px 0px",
       threshold: 1,
     };
 
