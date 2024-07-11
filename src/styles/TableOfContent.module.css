@@ -1,9 +1,15 @@
+.aside {
+  position: absolute;
+  right: -280px;
+  height: 100%;
+}
+
 .toc {
-  position: fixed;
-  top: 180px;
-  left: 80vw;
+  position: sticky;
+  top: 50px;
   line-height: 2;
   font-size: 0.76rem;
+  width: 250px;
 }
 
 .heading {
@@ -24,6 +30,11 @@
 }
 
 @media screen and (max-width: 1400px) {
+  .aside {
+    position: static;
+    height: auto;
+  }
+
   .toc {
     position: static;
     transform: none;

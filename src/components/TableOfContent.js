@@ -55,25 +55,27 @@ export default function TableOfContent({ data }) {
   }, []);
 
   return (
-    <div className={styles.toc}>
-      <h3>On This Page</h3>
-      <ul className={styles.headings}>
-        {headings.map((str) => {
-          const level = str.match(/^#+/)[0].length - 1;
-          const headingText = str.replace(/^#+/, "");
-          const headingLink = slugger.slug(headingText.trim());
-          return (
-            <li
-              key={headingLink}
-              className={`${styles[`toc-level-${level}`]} ${
-                currentHeading === headingLink ? styles.current : ""
-              } ${styles.heading}`}
-            >
-              <Link href={`#${headingLink}`}>{headingText}</Link>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+    <aside className={styles.aside}>
+      <div className={styles.toc}>
+        <h3>On This Page</h3>
+        <ul className={styles.headings}>
+          {headings.map((str) => {
+            const level = str.match(/^#+/)[0].length - 1;
+            const headingText = str.replace(/^#+/, "");
+            const headingLink = slugger.slug(headingText.trim());
+            return (
+              <li
+                key={headingLink}
+                className={`${styles[`toc-level-${level}`]} ${
+                  currentHeading === headingLink ? styles.current : ""
+                } ${styles.heading}`}
+              >
+                <Link href={`#${headingLink}`}>{headingText}</Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </aside>
   );
 }

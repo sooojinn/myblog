@@ -18,7 +18,7 @@ export default async function PostDetail({ params: { category, slug } }) {
   const postMainText = await getPostMainText(category, slug);
 
   return (
-    <section>
+    <section style={{ position: "relative", height: "100%" }}>
       <PostHeader data={postMetaData} />
       <TableOfContent data={postMainText} />
       <PostBody data={postMainText} />
