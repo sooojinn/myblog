@@ -15,6 +15,7 @@ export default function CategoryList({ renderedCategoryList }) {
 
   return (
     <nav className={styles.nav}>
+      <h3 className={styles.header}>📁 Categories</h3>
       {renderedCategoryList.map((renderedCategory) => {
         const category = renderedCategory.split(" ")[0].toLowerCase();
         return (

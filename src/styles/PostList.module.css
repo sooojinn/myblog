@@ -29,7 +29,10 @@
 }
 
 .category {
+  display: inline-block;
   margin: 2rem 0.7rem 0.8rem;
+  border-bottom: var(--main) solid 3px;
+  line-height: 1.5;
 }
 
 @media screen and (max-width: 700px) {
