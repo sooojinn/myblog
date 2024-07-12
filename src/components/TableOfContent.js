@@ -15,8 +15,8 @@ export default function TableOfContent({ data }) {
   useEffect(() => {
     const observerOptions = {
       root: null,
-      rootMargin: "-20px 0px -350px 0px",
-      threshold: 1,
+      rootMargin: "-45% 0px -45% 0px",
+      threshold: 0.5,
     };
 
     let lastIntersectingId = null;
@@ -24,13 +24,20 @@ export default function TableOfContent({ data }) {
     const observerCallback = (entries) => {
       let anyIntersecting = false;
 
-      entries.forEach((entry) => {
-        const targetId = entry.target.id;
+      const intersectingEntries = entries
+        .filter((entry) => entry.isIntersecting)
+        .map((entry) => entry.target.id);
 
+      console.log(intersectingEntries);
+
+      if (intersectingEntries.length > 0) {
+        setCurrentHeading(intersectingEntries[0]);
+      }
+
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          lastIntersectingId = targetId;
           anyIntersecting = true;
-          setCurrentHeading(targetId);
+          lastIntersectingId = entry.target.id;
         }
       });
 
@@ -39,20 +46,32 @@ export default function TableOfContent({ data }) {
       }
     };
 
-    const observer = new IntersectionObserver(
+    const observerInstance = new IntersectionObserver(
       observerCallback,
       observerOptions
     );
 
     const tags = document.querySelectorAll("h1, h2, h3");
-    tags.forEach((tag) => observer.observe(tag));
+    tags.forEach((tag) => observerInstance.observe(tag));
 
     return () => {
-      Object.values(tags).forEach((tag) => {
-        observer.unobserve(tag);
-      });
+      tags.forEach((tag) => observerInstance.unobserve(tag));
     };
   }, []);
+
+  const handleClick = (e, headingLink) => {
+    e.preventDefault(); // 기본 링크 동작 막기
+
+    const element = document.getElementById(headingLink);
+    if (element) {
+      // 요소가 뷰포트 중앙에 오도록 스크롤
+      const topOffset = window.innerHeight / 2 - element.offsetHeight / 2;
+      window.scrollTo({
+        top: element.getBoundingClientRect().top + window.scrollY - topOffset,
+        behavior: "smooth",
+      });
+    }
+  };
 
   return (
     <aside className={styles.aside}>
@@ -70,7 +89,12 @@ export default function TableOfContent({ data }) {
                   currentHeading === headingLink ? styles.current : ""
                 } ${styles.heading}`}
               >
-                <Link href={`#${headingLink}`}>{headingText}</Link>
+                <Link
+                  onClick={(e) => handleClick(e, headingLink)}
+                  href={`#${headingLink}`}
+                >
+                  {headingText}
+                </Link>
               </li>
             );
           })}
