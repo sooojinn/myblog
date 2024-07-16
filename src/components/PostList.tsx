@@ -3,21 +3,24 @@
 import Link from "next/link";
 import { useState } from "react";
 import styles from "@/styles/PostList.module.css";
+import { PostListItem } from "@/config/types";
 
 const POST_PER_PAGE = 10;
 
-export default function PostList({ renderedCategory, postList }) {
+interface Props {
+  renderedCategory: string;
+  postList: PostListItem[];
+}
+
+export default function PostList({ renderedCategory, postList }: Props) {
   const totalPage = Math.ceil(postList.length / POST_PER_PAGE);
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const startIndex = POST_PER_PAGE * (currentPage - 1);
   const endIndex = startIndex + POST_PER_PAGE;
   const postListInPage = postList.slice(startIndex, endIndex);
 
-  const pageNumList = [];
-  for (let i = 1; i <= totalPage; i++) {
-    pageNumList.push(i);
-  }
+  const pageNumList = Array.from({ length: totalPage }, (_, i) => i + 1);
 
   const handlePrevBtn = () => {
     setCurrentPage((prevCurrentPage) => prevCurrentPage - 1);
@@ -27,7 +30,7 @@ export default function PostList({ renderedCategory, postList }) {
     setCurrentPage((prevCurrentPage) => prevCurrentPage + 1);
   };
 
-  const handlePageChange = (pageNum) => {
+  const handlePageChange = (pageNum: number) => {
     setCurrentPage(pageNum);
   };
 
@@ -57,10 +60,9 @@ export default function PostList({ renderedCategory, postList }) {
           </button>
           {pageNumList.map((pageNum) => (
             <button
-              className={
-                styles.pageBtn +
-                (currentPage === pageNum ? ` ${styles.selected}` : "")
-              }
+              className={`${styles.pageBtn}${
+                currentPage === pageNum ? ` ${styles.selected}` : ""
+              }`}
               onClick={() => handlePageChange(pageNum)}
               key={pageNum}
             >

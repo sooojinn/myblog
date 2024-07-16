@@ -4,12 +4,17 @@ import Link from "next/link";
 import styles from "@/styles/DropDownMenu.module.css";
 import { useEffect, useRef, useState } from "react";
 
+interface Props {
+  currentCategory?: string;
+  renderedCategoryList: string[];
+}
+
 export default function DropDownMenu({
   currentCategory,
   renderedCategoryList,
-}) {
-  const [isOpen, setIsOpen] = useState("false");
-  const inputRef = useRef(null);
+}: Props) {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const inputRef = useRef<HTMLDivElement>(null);
 
   const handleInputClick = () => {
     setIsOpen((prevIsOpen) => !prevIsOpen);
@@ -20,8 +25,8 @@ export default function DropDownMenu({
   };
 
   useEffect(() => {
-    function handleClickOutside(e) {
-      const isInside = inputRef.current?.contains(e.target);
+    function handleClickOutside(e: MouseEvent): void {
+      const isInside = inputRef.current?.contains(e.target as Node);
       if (!isInside) {
         setIsOpen(false);
       }

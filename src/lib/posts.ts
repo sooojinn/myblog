@@ -24,10 +24,7 @@ export async function getPostMetaData(
   return parsedData.data;
 }
 
-export async function getPostMainText(
-  category: string,
-  slug: string
-): Promise<string> {
+export function getPostMainText(category: string, slug: string): string {
   const parsedData = parseMdxFile(category, slug);
   return parsedData.content;
 }
@@ -39,7 +36,7 @@ export async function getPostPaths(category?: string): Promise<string[]> {
 }
 
 export async function getSortedPostList(
-  category: string
+  category?: string
 ): Promise<PostListItem[]> {
   const postPaths = await getPostPaths(category);
   const postList: PostListItem[] = await Promise.all(
@@ -68,7 +65,7 @@ export function getCategoryList(): string[] {
   return categoryList;
 }
 
-export async function CountPosts(category: string): Promise<number> {
+export async function countPosts(category?: string): Promise<number> {
   const sortedPostList = await getSortedPostList(category);
   return sortedPostList.length;
 }
@@ -77,16 +74,19 @@ export function changeCategoryName(category: string): string {
   return category[0].toUpperCase() + category.slice(1, category.length);
 }
 
-export function renderCategory(category: string): string {
-  const renderedCategory = `${changeCategoryName(
-    category || "all"
-  )} (${CountPosts(category)})`;
+export async function renderCategory(category?: string): Promise<string> {
+  const changedCategory = changeCategoryName(category || "all");
+  const count = await countPosts(category);
+  const renderedCategory = `${changedCategory} (${count})`;
   return renderedCategory;
 }
 
-export function getRenderedCategoryList(): string[] {
+export async function getRenderedCategoryList(): Promise<string[]> {
   const categoryList = getCategoryList();
   categoryList.unshift("");
+  const renderedCategoryList = await Promise.all(
+    categoryList.map((category) => renderCategory(category))
+  );
 
-  return categoryList.map((category) => renderCategory(category));
+  return renderedCategoryList;
 }

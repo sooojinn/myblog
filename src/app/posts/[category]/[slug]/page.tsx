@@ -1,16 +1,9 @@
-import PostHeader from "@/components/PostHeader";
 import { getPostMetaData, getPostMainText, getPostPaths } from "@/lib/posts";
+import PostHeader from "@/components/PostHeader";
 import PostBody from "@/components/PostBody";
 import TableOfContent from "@/components/TableOfContent";
-import { serialize } from "next-mdx-remote/serialize";
-import remarkBreaks from "remark-breaks";
-import rehypePrettyCode from "rehype-pretty-code";
-import { Plugin } from "unified";
-import { Options } from "rehype-pretty-code";
-import rehypeSlug from "rehype-slug";
 
-// 타입 정의
-interface PostDetailProps {
+interface Props {
   params: {
     category: string;
     slug: string;
@@ -25,31 +18,16 @@ export async function generateStaticParams() {
   });
 }
 
-const PostDetail = async ({ params }: PostDetailProps) => {
+export default async function PostDetail({ params }: Props) {
   const { category, slug } = params;
   const postMetaData = await getPostMetaData(category, slug);
-  const postMainText = await getPostMainText(category, slug);
-  const mdxSource = await serialize(postMainText, {
-    mdxOptions: {
-      remarkPlugins: [remarkBreaks],
-      rehypePlugins: [
-        [
-          // 라이브러리간 타입 정의 불일치 문제로 타입 검사 우회
-          rehypePrettyCode as unknown as Plugin<[Options?]>,
-          { theme: "dark-plus" },
-        ],
-        rehypeSlug,
-      ],
-    },
-  });
+  const postMainText = getPostMainText(category, slug);
 
   return (
     <section style={{ position: "relative", height: "100%" }}>
       <PostHeader data={postMetaData} />
       <TableOfContent content={postMainText} />
-      <PostBody content={mdxSource} />
+      <PostBody content={postMainText} />
     </section>
   );
-};
-
-export default PostDetail;
+}

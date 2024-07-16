@@ -4,7 +4,11 @@ import Link from "next/link";
 import styles from "@/styles/CategoryList.module.css";
 import { usePathname } from "next/navigation";
 
-export default function CategoryList({ renderedCategoryList }) {
+interface Props {
+  renderedCategoryList: string[];
+}
+
+export default function CategoryList({ renderedCategoryList }: Props) {
   const pathname = usePathname();
   const pathParameters = pathname.split("/");
   let currentCategory = pathParameters[2];

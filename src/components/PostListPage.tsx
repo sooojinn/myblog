@@ -1,13 +1,19 @@
 import PostList from "./PostList";
-import { getSortedPostList } from "/lib/posts";
-import { getRenderedCategoryList } from "/lib/posts";
+import {
+  getRenderedCategoryList,
+  getSortedPostList,
+  renderCategory,
+} from "@/lib/posts";
 import DropDownMenu from "./DropDownMenu";
 import Aside from "./Aside";
 import styles from "@/styles/PostListPage.module.css";
-import { renderCategory } from "../../lib/posts";
 
-export default async function PostListPage({ category }) {
-  const postList = await getSortedPostList(category);
+interface Props {
+  category?: string;
+}
+
+const PostListPage = async ({ category }: Props) => {
+  const postList = await getSortedPostList();
   const renderedCategory = await renderCategory(category);
   const renderedCategoryList = await getRenderedCategoryList();
 
@@ -21,4 +27,6 @@ export default async function PostListPage({ category }) {
       <Aside />
     </section>
   );
-}
+};
+
+export default PostListPage;

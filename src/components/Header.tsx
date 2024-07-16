@@ -4,7 +4,6 @@ import Link from "next/link";
 import styles from "@/styles/Header.module.css";
 import { BLOG_NAME } from "@/config/const";
 import { usePathname } from "next/navigation";
-import Image from "next/image";
 import ThemeToggle from "./ThemeToggle";
 
 export default function Header() {
