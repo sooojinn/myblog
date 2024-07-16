@@ -4,13 +4,14 @@ import Link from "next/link";
 import GithubSlugger from "github-slugger";
 import styles from "@/styles/TableOfContent.module.css";
 import { useEffect, useState } from "react";
+import { PostMainData } from "@/config/types";
 
-export default function TableOfContent({ data }) {
+export default function TableOfContent({ content }: PostMainData) {
   const slugger = new GithubSlugger();
-  const headings = data
+  const headings = content
     .split("\n")
     .filter((str) => str.match(/^(#{1,3})\s.*$/));
-  const [currentHeading, setCurrentHeading] = useState();
+  const [currentHeading, setCurrentHeading] = useState<string | null>(null);
 
   useEffect(() => {
     const observerOptions = {
@@ -19,9 +20,9 @@ export default function TableOfContent({ data }) {
       threshold: 0.5,
     };
 
-    let lastIntersectingId = null;
+    let lastIntersectingId: string | null = null;
 
-    const observerCallback = (entries) => {
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
       let anyIntersecting = false;
 
       const intersectingEntries = entries
@@ -51,7 +52,7 @@ export default function TableOfContent({ data }) {
       observerOptions
     );
 
-    const tags = document.querySelectorAll("h1, h2, h3");
+    const tags = document.querySelectorAll<HTMLElement>("h1, h2, h3");
     tags.forEach((tag) => observerInstance.observe(tag));
 
     return () => {
@@ -59,7 +60,10 @@ export default function TableOfContent({ data }) {
     };
   }, []);
 
-  const handleClick = (e, headingLink) => {
+  const handleClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    headingLink: string
+  ) => {
     e.preventDefault(); // 기본 링크 동작 막기
 
     const element = document.getElementById(headingLink);
@@ -79,7 +83,7 @@ export default function TableOfContent({ data }) {
         <h3>On This Page</h3>
         <ul className={styles.headings}>
           {headings.map((str) => {
-            const level = str.match(/^#+/)[0].length - 1;
+            const level = (str.match(/^#+/)?.[0].length ?? 1) - 1;
             const headingText = str.replace(/^#+/, "");
             const headingLink = slugger.slug(headingText.trim());
             return (

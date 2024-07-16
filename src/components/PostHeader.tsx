@@ -1,6 +1,11 @@
+import { PostMetaData } from "@/config/types";
 import styles from "@/styles/PostHeader.module.css";
 
-export default function PostHeader({ data }) {
+interface PostHeaderProps {
+  data: PostMetaData;
+}
+
+export default function PostHeader({ data }: PostHeaderProps) {
   return (
     <>
       <header className={styles.header}>
