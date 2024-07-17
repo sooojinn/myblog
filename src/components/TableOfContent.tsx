@@ -29,8 +29,6 @@ export default function TableOfContent({ content }: PostMainData) {
         .filter((entry) => entry.isIntersecting)
         .map((entry) => entry.target.id);
 
-      console.log(intersectingEntries);
-
       if (intersectingEntries.length > 0) {
         setCurrentHeading(intersectingEntries[0]);
       }
