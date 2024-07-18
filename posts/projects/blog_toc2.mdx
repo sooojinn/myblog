@@ -1,0 +1,123 @@
+---
+title: "Next.js 블로그 프로젝트 - TOC 기능 구현(2)"
+date: "2024-06-01"
+desc: "완벽한 toc 기능 구현을 위한 삽질 기록"
+---
+
+# 문제
+
+toc 기능은 구현했지만 문제가 있었다.
+
+스크롤을 할 때마다 교차 요소를 감지하고 현재 제목 표시가 바뀌는 것에는 문제가 없었는데, 제목을 클릭할 때 클릭한 제목이 아닌 다른 제목에 표시가 되는 걸 확인했다.
+
+# 원인
+
+코드는 Intersection Observer가 교차 요소를 감지할 때마다 `currentHeading` 값이 가장 최근에 교차한 요소로 바뀌도록 되어있다. 그리고 제목을 클릭하면 해당 제목의 아이디 값을 가진 요소(제목)로 이동한다.
+
+문제는 제목을 클릭하여 이동할 때도 교차가 일어나는데, Intersection Observer가 가장 마지막으로 교차한 요소를 `currentHeading`으로 바꾸니 선택한 제목과 다른 제목이 `currentHeading` 값이 되는 경우가 발생하는 것이다.
+
+# 시도1
+
+그렇다면 교차 요소 중 가장 위에 있는 요소를 `currentHeading`으로 바꾸면 되겠다! 싶어서 코드를 수정했다.
+
+우선 뷰포트에 요소가 10%라도 보이면 교차가 감지되도록 옵션 객체의 `rootMargin`과 `threshold`를 수정했다. 제목을 클릭하면 요소가 뷰포트의 맨 위로 이동하기 때문에 루트 마진이 요소의 `height`보다 크면 교차가 감지되지 않는다.
+
+그리고 `isIntersecting`이 `true`인 요소의 아이디 값으로 이루어진 배열을 만들고 첫 번째 요소를 `currentHeading` 값으로 수정했다. `entries` 배열은 순서가 정해져있기 때문에 교차 순서에 상관없이 첫번째 요소가 가장 위에 있는 요소다.
+
+```jsx
+const observerOptions = {
+  root: null,
+  rootMargin: "0px", // 관찰할 영역을 뷰포트 전체로 수정
+  threshold: 0.1, // 요소가 10% 이상 보이면 감지되도록 수정
+};
+
+let lastIntersectingId = null;
+
+const observerCallback = (entries) => {
+  let anyIntersecting = false;
+
+  // 현재 교차 중인 요소의 배열
+  const intersectingEntries = entries
+    .filter((entry) => entry.isIntersecting)
+    .map((entry) => entry.target.id);
+
+  // 교차 중인 요소 중 첫 번째 요소를 currentHeading 값으로 수정
+  if (intersectingEntries.length > 0) {
+    setCurrentHeading(intersectingEntries[0]);
+  }
+
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      anyIntersecting = true;
+      lastIntersectingId = entry.target.id;
+    }
+  });
+
+  if (!anyIntersecting && lastIntersectingId) {
+    setCurrentHeading(lastIntersectingId);
+  }
+};
+```
+
+정상 작동하는 경우가 있고 아닌 경우가 있다. 아닌 경우를 분석해보니 뷰포트에 이미 들어와있는 요소로 이동하면 교차가 감지되지 않는 것이 원인이었다. 관찰 영역에 존재할 때가 아니라 관찰 영역의 가장자리에 요소가 교차할 때 `isIntersecting`이 `true`가 된다는 것을 깨달았다.
+
+# 시도2
+
+그렇다면 제목을 클릭했을 때 `setCurrentHeading` 함수를 호출해서 직접 바꾸는 건 어떨까 생각했다.
+
+```jsx
+<Link
+  onClick={() => {
+    setCurrentHeading(headingLink);
+  }}
+  href={`#${headingLink}`}
+>
+  {headingText}
+</Link>
+```
+
+제목을 클릭하는 순간 `currentHeading` 값이 클릭한 제목으로 바뀌지만 이내 다른 제목으로 바뀐다.
+
+`setCurrentHeading`이 호출된 뒤에 교차가 일어나고 `observer` 콜백함수가 호출되기 때문이었다.
+
+# 해결
+
+관찰할 영역과 클릭한 제목으로 이동했을 때 그 제목이 위치할 영역이 일치하게 해줌으로써 성공했다!
+
+이렇게 하면 해당 요소만 감지되기 때문에 시도2에서 했던 것처럼 `currentHeading` 값을 직접 바꿔줄 필요가 없다.
+
+나는 뷰포트 맨 위에 위치하는 것보다 중간에 위치하는 게 낫다고 생각해서 관찰 영역을 뷰포트 중앙으로 했다.
+
+```jsx
+const observerOptions = {
+  root: null,
+  rootMargin: "-45% 0px -45% 0px",
+  threshold: 0.5,
+};
+```
+
+그리고 `window.scrollTo()`를 사용해 직접 스크롤을 이동시켰다.
+
+```jsx
+<Link onClick={(e) => handleClick(e, headingLink)} href={`#${headingLink}`}>
+  {headingText}
+</Link>
+```
+
+```jsx
+const handleClick = (e, headingLink) => {
+  e.preventDefault(); // 기본 링크 동작 막기
+
+  const element = document.getElementById(headingLink);
+  if (element) {
+    // 요소가 뷰포트 중앙에 오도록 스크롤
+    const topOffset = window.innerHeight / 2 - element.offsetHeight / 2;
+    window.scrollTo({
+      top: element.getBoundingClientRect().top + window.scrollY - topOffset,
+      behavior: "smooth",
+    });
+  }
+};
+```
+
+사실 시도1, 시도2 이후에도 수많은 삽질을 했으나 코드가 너무 복잡해지는 의미 없는 삽질들이어서 해결하는 데 도움이 됐던 시도만 기록했다. 고민을 많이 했던 부분인데 잘 동작하는 걸 보니 뿌듯하다!
