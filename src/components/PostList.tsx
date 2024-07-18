@@ -5,7 +5,7 @@ import { useState } from "react";
 import styles from "@/styles/PostList.module.css";
 import { PostListItem } from "@/config/types";
 
-const POST_PER_PAGE = 10;
+const POST_PER_PAGE = 5;
 
 interface Props {
   renderedCategory: string;

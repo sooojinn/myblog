@@ -13,7 +13,7 @@ interface Props {
 }
 
 const PostListPage = async ({ category }: Props) => {
-  const postList = await getSortedPostList();
+  const postList = await getSortedPostList(category);
   const renderedCategory = await renderCategory(category);
   const renderedCategoryList = await getRenderedCategoryList();
 
