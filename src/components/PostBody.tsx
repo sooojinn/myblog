@@ -20,9 +20,7 @@ const PostBody = ({ content }: Props) => {
               [
                 // @ts-ignore
                 rehypePrettyCode,
-                {
-                  theme: { dark: "github-dark-dimmed", light: "github-light" },
-                },
+                { theme: "dark-plus" },
               ],
               rehypeSlug,
             ],
