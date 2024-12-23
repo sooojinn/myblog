@@ -1,0 +1,254 @@
+---
+title: "react-virtual로 무한 스크롤에 가상 리스트 적용하기"
+date: "2024-12-24"
+desc: "성능 개선과 스크롤 유지 기능까지 구현하기"
+---
+
+# 도입 배경
+
+같은 프로젝트를 하는 팀원분이 무신사 사이트를 보여주시며 무한 스크롤 리스트를 화면에 보이는 요소만 렌더링되도록 최적화가 가능하냐고 물어보셨다. 보여주신 화면에선 스크롤을 계속 내려도 DOM 요소가 쌓이지 않고 4~5개를 유지하며 화면에 보이는 요소만 렌더링되고 있었다.
+
+현재 프로젝트는 데이터가 그리 많지 않아 성능에 문제가 없지만 수백, 수천개의 데이터를 받아와 렌더링해야 하는 상황이라면? 😵‍💫 문제가 생길 것이다.
+
+가상화 기능 도입 이전엔 이렇게 데이터를 불러올 때마다 요소가 쌓이고 있었다.
+
+![1](/posts/web/react-virtual/1.gif)
+
+# 가상 리스트(Virtualized List)란?
+
+가상 리스트란 나열된 리스트의 아이템 중 화면에 실제로 보이는 아이템만 렌더링하는 기술이다. 이 기능을 도와주는 라이브러리가 여러 개 있는데 그중 가장 가볍고, [공식 문서](https://tanstack.com/virtual/latest)가 친절하고, Tanstack에서 만든 `react-virtual`이라는 라이브러리를 사용했다. 공식 문서 외에는 자료가 많이 없어 조금 고민했지만 일단 해보기로 했다.
+
+---
+
+# react-virtual 적용
+
+## UI 설명
+
+가상 리스트를 적용하려는 리스트는 화면의 가로 너비에 맞게 요소의 가로, 세로 너비가 결정되는 반응형 ui이다. 요소의 높이가 정해져 있지 않기 때문에 요소의 크기를 동적으로 측정해야 한다.
+
+리스트의 디자인은 grid 형태이지만 각 행을 하나의 요소로 감싸서 리스트 형태로 만들었다.
+
+## useVirtualizer 주요 옵션
+
+react-virtual을 설치했으면 useVirtualizer 훅을 불러온다. 주로 쓰이는 옵션을 설명하자면
+
+- `count`: 가상화할 항목의 총 개수
+- `getScrollElement`: 스크롤 이벤트를 추적할 컨테이너 요소를 반환하는 함수
+- `estimateSize`: 각 항목의 높이를 추정하는 함수. 동적으로 측정하는 경우 추정치를 넣어줌
+- `overscan`: 현재 뷰포트 외에 추가로 렌더링할 항목 수. 값이 클수록 스크롤이 부드러워지지만, 더 많은 DOM 요소가 렌더링됨
+- `horizontal`: 가로 방향 스크롤 지원. 기본값은 false
+
+## 요소의 높이 동적으로 측정하기
+
+요소를 렌더링할 때 ref 콜백을 사용하여 `measureElement`를 호출한다. 이때 data-index 속성을 꼭 추가해야 한다. `measureElement`는 useVirtualizer의 옵션으로 따로 설정하지 않을 경우 `getBoundingClientRect()`를 사용하여 각 요소의 크기를 측정하고 가상화에 반영한다.
+
+## 1차 적용 결과
+
+```tsx
+import { useRef } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import PostItem from "./PostItem";
+import { PostMeta } from "@/config/types";
+
+export default function VirtualPostGrid({
+  postList,
+}: {
+  postList: PostMeta[];
+}) {
+  const columns = 2;
+  const parentRef = useRef<HTMLDivElement>(null);
+  const rowCount = Math.ceil(postList.length / columns);
+
+  const gridVirtualizer = useVirtualizer({
+    count: rowCount,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 320, // 초기 추정 높이
+    overscan: 1,
+  });
+
+  return (
+    <div
+      ref={parentRef}
+      className="w-full h-screen overflow-auto scrollbar-hide relative"
+    >
+      <div
+        style={{
+          height: `${gridVirtualizer.getTotalSize()}px`, // 가상화된 전체 높이
+        }}
+        className="w-full relative"
+      >
+        {gridVirtualizer.getVirtualItems().map((virtualRow) => {
+          // 현재 렌더링 중인 줄(row) 번호
+          const rowIndex = virtualRow.index;
+
+          // 현재 줄에 포함된 요소들 계산
+          const itemsInRow = postList.slice(
+            rowIndex * columns,
+            rowIndex * columns + columns
+          );
+
+          return (
+            <div
+              key={virtualRow.key}
+              data-index={virtualRow.index}
+              ref={gridVirtualizer.measureElement}
+              style={{
+                position: "absolute",
+                top: `${virtualRow.start}px`, // 줄의 시작 위치
+                left: 0,
+              }}
+              className="w-full grid grid-cols-2 gap-[3px] pb-1"
+            >
+              {itemsInRow.map((post, colIndex) => (
+                <div key={colIndex} className="w-full">
+                  <PostItem {...post} />
+                </div>
+              ))}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+```
+
+![1](/posts/web/react-virtual/4.gif)
+
+---
+
+# 성능 개선
+
+## 문제
+
+만약 각 요소의 높이가 제각기 다르다면 모든 요소의 높이를 동적으로 측정해야만 하지만, 이 리스트의 ui는 가로 너비에 따라 모든 요소의 높이가 일정하다. 따라서 모든 요소의 높이를 측정하는 것은 불필요하다.
+
+게다가 `getBoundingClientRect()`의 잦은 사용은 성능 저하를 일으킬 수 있기 때문에 주의해서 사용해야 한다. 일단 `measureElement`의 기본 동작에 `getBoundingClientRect()`를 호출할 때마다 콘솔에 height를 출력하는 코드를 추가해보았다.
+
+```tsx
+const gridVirtualizer = useVirtualizer({
+  count: rowCount,
+  getScrollElement: () => parentRef.current,
+  estimateSize: () => cachedRowHeight.current ?? 320,
+  measureElement: (el) => {
+    const rowHeight = el.getBoundingClientRect().height;
+    console.log(`[getBoundingClientRect 실행] 요소 높이: ${rowHeight}px`);
+    return rowHeight;
+  },
+  overscan: 1,
+});
+```
+
+![1](/posts/web/react-virtual/2.gif)
+
+이렇게 스크롤을 내릴 때마다 `getBoundingClientRect()`가 연속적으로 호출되고 있었다. 개선이 필요하다!
+
+## 해결
+
+첫 요소가 렌더링될 때 측정한 높이를 state로 저장하고 저장된 높이 값이 있으면 그대로 반환하게 했다. 그리고 resize 이벤트가 일어날 때 state를 초기화했다. 이렇게 하면 컴포넌트가 처음 렌더링될 때와 resize 이벤트가 일어날 때만 `getBoundingClientRect()`가 호출된다.
+
+```tsx
+const [cachedRowHeight, setCachedRowHeight] = useState<number | null>(null);
+
+// 화면 크기 변경 감지 및 캐싱된 높이 초기화
+useEffect(() => {
+  const handleResize = () => {
+    setCachedRowHeight(null);
+  };
+
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
+
+const gridVirtualizer = useVirtualizer({
+  count: rowCount,
+  getScrollElement: () => parentRef.current,
+  estimateSize: () => cachedRowHeight ?? 320,
+  measureElement: (el) => {
+    if (cachedRowHeight === null) {
+      // 초기 측정 시 높이를 상태에 저장
+      const height = el.getBoundingClientRect().height;
+      console.log(`[getBoundingClientRect 실행] 요소 높이: ${height}px`);
+      setCachedRowHeight(height);
+      return height;
+    }
+    return cachedRowHeight;
+  },
+  overscan: 1,
+});
+```
+
+![1](/posts/web/react-virtual/3.gif)
+
+---
+
+# 스크롤 유지 기능 추가 구현
+
+가상 리스트를 구현하고 새로운 문제가 생겼다. 리스트의 게시물을 클릭하여 상세 페이지로 이동한 후 뒤로가기 버튼을 눌러 이전으로 돌아왔을 때 스크롤이 유지되지 않고 상단으로 올라갔다. 가상 리스트를 구현하기 전엔 자동으로 유지됐었는데… 왜… 왜죠…??
+
+## 원인
+
+이전에는 브라우저가 윈도우 자체의 스크롤 위치를 기억하여 뒤로가기 시 스크롤이 유지되고 있었다. 게다가 무한 스크롤로 받아온 데이터는 리액트 쿼리로 캐싱되기 때문에 첫 페이지의 데이터만 렌더링되는 이슈가 없었다. 그래서 이 기능을 따로 구현하지 않아도 원하는 대로 동작했던 것
+
+`react-virtual`에서는 `getScrollElement`에 전달한 스크롤 속성이 있는 부모 요소를 기준으로 렌더링 여부를 결정한다. 즉, 윈도우 자체의 스크롤이 아니라 부모 요소의 스크롤이 움직인다. 브라우저는 컴포넌트 내부의 스크롤 위치는 기억하지 않기 때문에 초기화되는 것이 당연했다.
+
+## 해결 과정
+
+우선 스크롤 위치를 기억하는 경우와 기억하지 않는 경우를 구분해야 했다. 1. 게시물을 클릭하여 상세 페이지로 이동했다가 뒤로가기 한 경우 2. 새로고침한 경우 외엔 스크롤 위치를 기억할 필요가 없었다. 이걸 어떻게 구분할까 하다가 [오늘의 집 기술 블로그](https://www.bucketplace.com/post/2024-09-11-virtualizedlist-%EB%AC%B4%ED%95%9C%EC%8A%A4%ED%81%AC%EB%A1%A4-%EB%A6%AC%EC%8A%A4%ED%8A%B8-%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81-%EA%B0%9C%EB%B0%9C-%EC%9D%B4%EC%95%BC%EA%B8%B0/)에서 아이디어를 얻어 `History API`를 이용하기로 했다!
+
+history는 스택으로 관리되기 때문에 뒤로가기를 누르면 이전 엔트리로 이동한다. 이걸 이용해서 가상 리스트가 있는 페이지를 떠나기 전에 스크롤 위치를 `history.state`에 저장하고 state에 저장된 스크롤 위치가 있으면 해당 위치까지 이동시키는 로직을 짰다.
+
+```tsx
+const saveScrollPosition = () => {
+  if (parentRef.current) {
+    const scrollPosition = parentRef.current.scrollTop; // 컴포넌트 내부 스크롤 위치
+    history.replaceState({ ...history.state, scrollY: scrollPosition }, "");
+  }
+};
+```
+
+처음엔 위 함수를 `beforeunload` 이벤트에 이벤트 핸들러로 할당하여 페이지를 떠나기 직전에 스크롤 위치를 저장하려 했다. 하지만 `beforeunload` 이벤트는 모바일 환경에서 불안정하다고 하여 `scroll` 이벤트에 할당했다. 이때 성능 문제를 방지하기 위해 쓰로틀링을 적용하여 500ms마다 호출되게 했다.
+
+```tsx
+// 스크롤 위치 상태 저장
+useEffect(() => {
+  const saveScrollPosition = () => {
+    if (parentRef.current) {
+      const scrollPosition = parentRef.current.scrollTop;
+      history.replaceState({ ...history.state, scrollY: scrollPosition }, "");
+      console.log(history.state);
+    }
+  };
+
+  // 쓰로틀링을 적용한 스크롤 이벤트 핸들러
+  const throttledSaveScrollPosition = throttle(saveScrollPosition, 500);
+
+  // 스크롤 이벤트로 저장
+  const scrollElement = parentRef.current;
+  scrollElement?.addEventListener("scroll", throttledSaveScrollPosition);
+
+  return () => {
+    scrollElement?.removeEventListener("scroll", throttledSaveScrollPosition);
+  };
+}, []);
+
+// 페이지 재방문 시 스크롤 위치 복원
+useEffect(() => {
+  if (parentRef.current) {
+    const savedPosition = history.state.scrollY;
+
+    if (savedPosition) {
+      parentRef.current.scrollTo({
+        top: parseInt(savedPosition, 10),
+        behavior: "auto",
+      });
+    }
+  }
+}, []);
+```
+
+## 결과
+
+원하는 대로 잘 동작했다!
+
+![1](/posts/web/react-virtual/5.gif)
