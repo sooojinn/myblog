@@ -1,4 +1,4 @@
-import "@/styles/globals.css";
+import "./globals.css";
 import Header from "@/components/Header";
 import { BLOG_NAME, BLOG_DESC } from "@/config/const";
 import Footer from "@/components/Footer";
