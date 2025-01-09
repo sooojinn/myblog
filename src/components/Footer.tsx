@@ -1,12 +1,10 @@
-"use client";
-
-import styles from "@/styles/Footer.module.css";
+import FullWidthHrLine from "./FullWidthHrLine";
 
 export default function Footer() {
   return (
     <>
-      <hr />
-      <div className={styles.footer}>
+      <FullWidthHrLine />
+      <div className="w-full flex justify-center items-center h-[100px] text-[0.9rem]">
         <p>© 2024 박수진 All Rights Reserved.</p>
       </div>
     </>

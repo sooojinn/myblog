@@ -13,7 +13,7 @@ export interface PostData {
   content: string;
 }
 
-export interface PostListItem extends PostMetaData {
+export interface PostListItemProps extends PostMetaData {
   slug: string;
   url: string;
 }

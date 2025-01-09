@@ -1,19 +1,15 @@
 import { PostMetaData } from "@/config/types";
-import styles from "@/styles/PostHeader.module.css";
 
-interface Props {
-  data: PostMetaData;
-}
 
-export default function PostHeader({ data }: Props) {
+export default function PostHeader({ title, desc, date }: PostMetaData) {
   return (
     <>
-      <header className={styles.header}>
-        <h1>{data.title}</h1>
-        <p className={styles.desc}>{data.desc}</p>
-        <p className={styles.date}>{data.date}</p>
+      <header className="text-center mt-[50px] mb-[30px]">
+        <h1 className="font-bold">{title}</h1>
+        <p className="my-2.5 text-gray-400">{desc}</p>
+        <p className="font-[0.9rem] text-gray-400">{date}</p>
       </header>
-      <hr className={styles.line} />
+      <hr className="mb-[2em]" />
     </>
   );
 }

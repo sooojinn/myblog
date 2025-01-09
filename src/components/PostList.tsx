@@ -1,15 +1,16 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
-import styles from "@/styles/PostList.module.css";
-import { PostListItem } from "@/config/types";
+import { PostListItemProps } from "@/config/types";
+import { PostListCategory } from "./PostListCategory";
+import { PostListItem } from "./PostListItem";
+import { PageNumBtns } from "./PageNumBtns";
 
 const POST_PER_PAGE = 5;
 
 interface Props {
   renderedCategory: string;
-  postList: PostListItem[];
+  postList: PostListItemProps[];
 }
 
 export default function PostList({ renderedCategory, postList }: Props) {
@@ -22,63 +23,25 @@ export default function PostList({ renderedCategory, postList }: Props) {
 
   const pageNumList = Array.from({ length: totalPage }, (_, i) => i + 1);
 
-  const handlePrevBtn = () => {
-    setCurrentPage((prevCurrentPage) => prevCurrentPage - 1);
-  };
-
-  const handleNextBtn = () => {
-    setCurrentPage((prevCurrentPage) => prevCurrentPage + 1);
-  };
-
-  const handlePageChange = (pageNum: number) => {
-    setCurrentPage(pageNum);
-  };
-
-  const isPrevBtnDisabled = currentPage <= 1;
-  const isNextBtnDisabled = currentPage >= totalPage;
-
   return (
     <section>
-      <h2 className={styles.category}>{renderedCategory}</h2>
-      <ul className={styles.postList}>
+      <div className="hidden md:block">
+        <PostListCategory category={renderedCategory} />
+      </div>
+      <div className="pb-[4vh] md:py-2.5">
         {postListInPage.map((post) => (
-          <Link href={post.url} className={styles.post} key={post.slug}>
-            <h3 className={styles.title}>{post.title}</h3>
-            <p className={styles.desc}>{post.desc}</p>
-            <p className={styles.date}>{post.date}</p>
-          </Link>
+          <PostListItem {...post} />
         ))}
-      </ul>
+      </div>
       {totalPage ? (
-        <div className={styles.pageBtns}>
-          <button
-            className={styles.pageBtn}
-            onClick={handlePrevBtn}
-            disabled={isPrevBtnDisabled}
-          >
-            〈
-          </button>
-          {pageNumList.map((pageNum) => (
-            <button
-              className={`${styles.pageBtn}${
-                currentPage === pageNum ? ` ${styles.selected}` : ""
-              }`}
-              onClick={() => handlePageChange(pageNum)}
-              key={pageNum}
-            >
-              {pageNum}
-            </button>
-          ))}
-          <button
-            className={styles.pageBtn}
-            onClick={handleNextBtn}
-            disabled={isNextBtnDisabled}
-          >
-            〉
-          </button>
-        </div>
+        <PageNumBtns
+          pageNumList={pageNumList}
+          totalPage={totalPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
       ) : (
-        <p style={{ textAlign: "center" }}>등록된 포스트가 없습니다.</p>
+        <p className="text-center">등록된 포스트가 없습니다.</p>
       )}
     </section>
   );

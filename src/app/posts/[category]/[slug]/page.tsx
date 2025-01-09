@@ -25,7 +25,7 @@ export default async function PostDetail({ params }: Props) {
 
   return (
     <section style={{ position: "relative", height: "100%" }}>
-      <PostHeader data={postMetaData} />
+      <PostHeader {...postMetaData} />
       <TableOfContent content={postMainText} />
       <PostBody content={postMainText} />
     </section>

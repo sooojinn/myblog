@@ -30,9 +30,11 @@ export default function RootLayout({ children }: Props) {
     <html lang="ko">
       <body className={gothic.className}>
         <ThemeProvider>
-          <Header />
-          <main>{children}</main>
-          <Footer />
+          <div className="min-w-[320px] max-w-[900px] mx-auto">
+            <Header />
+            <main>{children}</main>
+            <Footer />
+          </div>
         </ThemeProvider>
       </body>
     </html>

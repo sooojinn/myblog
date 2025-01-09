@@ -3,7 +3,6 @@
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { HiOutlineSun, HiOutlineMoon } from "react-icons/hi2";
-import styles from "@/styles/ThemeToggle.module.css";
 
 export default function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -15,13 +14,16 @@ export default function ThemeToggle() {
 
   if (!mounted) return null;
 
-  return mounted && theme === "dark" ? (
-    <button className={styles.toggleBtn} onClick={() => setTheme("light")}>
-      <HiOutlineSun size={20} />
-    </button>
-  ) : (
-    <button className={styles.toggleBtn} onClick={() => setTheme("dark")}>
-      <HiOutlineMoon size={20} />
+  return (
+    <button
+      className="bg-gray-100 dark:bg-gray-700 border-none rounded-md w-7 h-7 flex justify-center items-center cursor-pointer"
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+    >
+      {theme === "dark" ? (
+        <HiOutlineSun size={20} />
+      ) : (
+        <HiOutlineMoon size={20} />
+      )}
     </button>
   );
 }

@@ -1,13 +1,12 @@
 import CategoryList from "./CategoryList";
 import { getRenderedCategoryList } from "@/lib/posts";
-import styles from "@/styles/Aside.module.css";
 
 export default async function Aside() {
   const renderedCategoryList = await getRenderedCategoryList();
 
   return (
-    <aside className={styles.aside}>
-      <hr />
+    <aside className="md:flex md:h-full hidden">
+      <hr className="w-[1px] h-full" />
       <CategoryList renderedCategoryList={renderedCategoryList} />
     </aside>
   );

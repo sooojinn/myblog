@@ -4,13 +4,9 @@ import remarkBreaks from "remark-breaks";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 
-interface Props {
-  content: string;
-}
-
-const PostBody = ({ content }: Props) => {
+export default function PostBody({ content }: { content: string }) {
   return (
-    <article className={styles.article}>
+    <article className="prose dark:prose-invert">
       <MDXRemote
         source={content}
         options={{
@@ -29,6 +25,4 @@ const PostBody = ({ content }: Props) => {
       />
     </article>
   );
-};
-
-export default PostBody;
+}
