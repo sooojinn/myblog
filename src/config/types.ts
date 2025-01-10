@@ -2,6 +2,7 @@ export interface PostMetaData {
   title: string;
   date: string;
   desc: string;
+  tags: string[];
 }
 
 export interface PostMainData {
@@ -16,4 +17,5 @@ export interface PostData {
 export interface PostListItemProps extends PostMetaData {
   slug: string;
   url: string;
+  previewContent: string;
 }

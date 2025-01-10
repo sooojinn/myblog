@@ -21,7 +21,7 @@ export async function generateStaticParams() {
 export default async function PostDetail({ params }: Props) {
   const { category, slug } = params;
   const postMetaData = await getPostMetaData(category, slug);
-  const postMainText = getPostMainText(category, slug);
+  const postMainText = await getPostMainText(category, slug);
 
   return (
     <section className="w-full relative">

@@ -8,3 +8,12 @@ export function parseMarkdownHeading(str: string) {
 
   return { depth, headingText, headingLink };
 }
+
+export function extractPreviewContent(markdown: string) {
+  return markdown
+    .replace(/^#{1,6}\s.*$/gm, "")
+    .replace(/<[^>]*>/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 100);
+}

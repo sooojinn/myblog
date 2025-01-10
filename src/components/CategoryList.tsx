@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import AsideItemTitle from "./AsideItemTitle";
 
 interface Props {
   renderedCategoryList: string[];
@@ -17,23 +18,25 @@ export default function CategoryList({ renderedCategoryList }: Props) {
   }
 
   return (
-    <nav className="md:flex md:flex-col md:justify-start md:items-start md:gap-[3px] md:pt-[4vh] md:pl-[3vw] hidden">
-      <h3 className="mb-[5px] text-[1.1rem] font-semibold">📁 Categories</h3>
-      {renderedCategoryList.map((renderedCategory) => {
-        const category = renderedCategory.split(" ")[0].toLowerCase();
-        return (
-          <Link
-            href={`/posts/${category === "all" ? "" : category}`}
-            className={`${
-              currentCategory === category ? "!bg-main text-white" : ""
-            } p-[0.3em] rounded-[3px] hover:bg-gray-100 dark:hover:bg-gray-800
-            `}
-            key={category}
-          >
-            {renderedCategory}
-          </Link>
-        );
-      })}
+    <nav className="flex flex-col justify-start items-start">
+      <AsideItemTitle>📁 Categories</AsideItemTitle>
+      <div className="flex flex-col gap-[3px]">
+        {renderedCategoryList.map((renderedCategory) => {
+          const category = renderedCategory.split(" ")[0].toLowerCase();
+          return (
+            <Link
+              href={`/posts/${category === "all" ? "" : category}`}
+              className={`${
+                currentCategory === category ? "!bg-main text-white" : ""
+              } w-fit p-[0.3em] rounded-[3px] hover:bg-gray-100 dark:hover:bg-gray-800
+          `}
+              key={category}
+            >
+              {renderedCategory}
+            </Link>
+          );
+        })}
+      </div>
     </nav>
   );
 }

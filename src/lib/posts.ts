@@ -3,6 +3,7 @@ import path from "path";
 import { sync } from "glob";
 import matter from "gray-matter";
 import { PostData, PostMetaData, PostListItemProps } from "@/config/types";
+import { extractPreviewContent } from "./utilis";
 
 const postsDirectory = path.join(process.cwd(), "posts");
 
@@ -24,7 +25,10 @@ export async function getPostMetaData(
   return parsedData.data;
 }
 
-export function getPostMainText(category: string, slug: string): string {
+export async function getPostMainText(
+  category: string,
+  slug: string
+): Promise<string> {
   const parsedData = parseMdxFile(category, slug);
   return parsedData.content;
 }
@@ -43,9 +47,11 @@ export async function getSortedPostList(
     postPaths.map(async (postPath) => {
       const [category, slug] = postPath.split("/").slice(-2);
       const url = `/posts/${category}/${slug}`;
-      const postMetaData = await getPostMetaData(category, slug); // 비동기 호출
+      const postMetaData = await getPostMetaData(category, slug);
+      const postMainContent = await getPostMainText(category, slug);
+      const previewContent = extractPreviewContent(postMainContent);
 
-      return { slug, url, ...postMetaData }; // PostListItem 형태로 반환
+      return { slug, url, ...postMetaData, previewContent };
     })
   );
 
