@@ -17,7 +17,7 @@ const PostListPage = async ({ category }: Props) => {
   const renderedCategoryList = await getRenderedCategoryList();
 
   return (
-    <section className="md:grid md:grid-cols-[auto_200px]">
+    <section className="flex-grow md:grid md:grid-cols-[auto_200px]">
       <div className="md:pr-5">
         <DropDownMenu
           currentCategory={category}

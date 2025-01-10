@@ -24,7 +24,7 @@ export default async function PostDetail({ params }: Props) {
   const postMainText = getPostMainText(category, slug);
 
   return (
-    <section style={{ position: "relative", height: "100%" }}>
+    <section className="w-full relative">
       <PostHeader {...postMetaData} />
       <TableOfContent content={postMainText} />
       <PostBody content={postMainText} />

@@ -28,7 +28,7 @@ export default function PostList({ renderedCategory, postList }: Props) {
       <div className="hidden md:block">
         <PostListCategory category={renderedCategory} />
       </div>
-      <div className="pb-[4vh] md:py-2.5">
+      <div className="pb-[4vh]">
         {postListInPage.map((post) => (
           <PostListItem {...post} />
         ))}

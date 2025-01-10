@@ -1,12 +1,11 @@
 import { MDXRemote } from "next-mdx-remote/rsc";
-import styles from "@/styles/PostBody.module.css";
 import remarkBreaks from "remark-breaks";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 
 export default function PostBody({ content }: { content: string }) {
   return (
-    <article className="prose dark:prose-invert">
+    <article className="prose dark:prose-invert max-w-none mt-[5rem] mb-[300px]">
       <MDXRemote
         source={content}
         options={{
@@ -16,7 +15,7 @@ export default function PostBody({ content }: { content: string }) {
               [
                 // @ts-ignore
                 rehypePrettyCode,
-                { theme: "dark-plus" },
+                { theme: "slack-dark" },
               ],
               rehypeSlug,
             ],

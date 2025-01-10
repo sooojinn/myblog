@@ -32,6 +32,7 @@ export default function Header() {
         {navList.map(({ label, href }) => (
           <Link
             href={href}
+            key={href}
             className={`text-center h-8 sm:h-10
                 ${
                   `/${currentPage}` === href
