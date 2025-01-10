@@ -18,7 +18,7 @@ export default function CategoryList({ renderedCategoryList }: Props) {
 
   return (
     <nav className="md:flex md:flex-col md:justify-start md:items-start md:gap-[3px] md:pt-[4vh] md:pl-[3vw] hidden">
-      <h3 className="mb-[5px] font-bold">📁 Categories</h3>
+      <h3 className="mb-[5px] text-[1.1rem] font-semibold">📁 Categories</h3>
       {renderedCategoryList.map((renderedCategory) => {
         const category = renderedCategory.split(" ")[0].toLowerCase();
         return (

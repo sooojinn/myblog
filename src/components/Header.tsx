@@ -19,7 +19,7 @@ export default function Header() {
     <div className="bg-inherit w-full flex flex-col px-[5vw]">
       <header className="bg-inherit px-inherit h-[70px] sm:h-[100px] flex justify-between items-center">
         <Link href="/">
-          <h1 className="font-bold">{BLOG_NAME}</h1>
+          <h1 className="text-[1.7rem] font-bold">{BLOG_NAME}</h1>
         </Link>
         <div className="flex justify-center items-center gap-4">
           <Link href="https://github.com/sooojinn">

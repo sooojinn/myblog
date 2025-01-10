@@ -14,9 +14,9 @@ export function PostListItem({
       className="block w-full p-[1rem_0.7rem] rounded-[5px] hover:bg-gray-100 dark:hover:bg-gray-800"
       key={slug}
     >
-      <h3 className="break-keep leading-[1.5] text-[1.2rem] font-bold">
+      <h2 className="break-keep leading-[1.5] text-[1.2rem] font-bold">
         {title}
-      </h3>
+      </h2>
       <p className="text-gray-400 text-[0.9rem] my-[0.4em]">{desc}</p>
       <p className="text-[0.9rem] text-gray-400">{date}</p>
     </Link>

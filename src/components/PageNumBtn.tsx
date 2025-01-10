@@ -9,7 +9,7 @@ export function PageNumBtn({
 }) {
   return (
     <button
-      className={`bg-transparent border-none cursor-pointer text-[var(--page-btn-color)] hover:text-main disabled:text-[var(--page-btn-color)] disabled:cursor-default ${
+      className={`bg-transparent border-none cursor-pointer text-gray-500 hover:text-main disabled:hover:text-gray-500 disabled:cursor-default ${
         isSelected ? "text-main" : ""
       }`}
       disabled={disabled}

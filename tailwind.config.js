@@ -6,21 +6,22 @@ module.exports = {
     extend: {
       colors: {
         main: "var(--main)",
+        background: "var(--background)",
       },
       typography: {
         DEFAULT: {
           css: {
+            "*": {
+              lineHeight: 1.7,
+            },
             h1: {
-              fontSize: "1.7rem",
+              fontSize: "1.6rem",
             },
             h2: {
-              fontSize: "1.5rem",
+              fontSize: "1.4rem",
             },
             h3: {
-              fontSize: "1.3rem",
-            },
-            h4: {
-              fontSize: "1.1rem",
+              fontSize: "1.2rem",
             },
             p: {
               lineHeight: "1.7",
@@ -36,33 +37,11 @@ module.exports = {
                 textDecoration: "underline",
               },
             },
-            pre: {
-              padding: "1em",
-              borderRadius: "5px",
-              marginBottom: "1em",
-              overflowX: "auto",
-            },
             code: {
               backgroundColor: "var(--code-bg)",
               color: "var(--code-color)",
               padding: "0.15em 0.4em",
               borderRadius: "4px",
-            },
-          },
-        },
-        sm: {
-          css: {
-            "*": {
-              fontSize: "14px",
-            },
-            h1: {
-              fontSize: "1.5rem",
-            },
-            h2: {
-              fontSize: "1.3rem",
-            },
-            h3: {
-              fontSize: "1.1rem",
             },
           },
         },
