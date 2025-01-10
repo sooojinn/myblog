@@ -33,7 +33,7 @@ export function PageNumBtns({
         <PageNumBtn disabled={isPrevBtnDisabled}>이전</PageNumBtn>
       </div>
       {pageNumList.map((pageNum) => (
-        <div onClick={() => handlePageChange(pageNum)}>
+        <div key={pageNum} onClick={() => handlePageChange(pageNum)}>
           <PageNumBtn isSelected={currentPage === pageNum}>
             {pageNum}
           </PageNumBtn>

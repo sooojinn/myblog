@@ -29,8 +29,8 @@ export default function PostList({ renderedCategory, postList }: Props) {
         <PostListCategory category={renderedCategory} />
       </div>
       <div className="pb-[4vh]">
-        {postListInPage.map((post) => (
-          <PostListItem {...post} />
+        {postListInPage.map((post, index) => (
+          <PostListItem {...post} key={index} />
         ))}
       </div>
       {totalPage ? (

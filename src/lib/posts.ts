@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import { sync } from "glob";
 import matter from "gray-matter";
-import { PostData, PostMetaData, PostListItem } from "@/config/types";
+import { PostData, PostMetaData, PostListItemProps } from "@/config/types";
 
 const postsDirectory = path.join(process.cwd(), "posts");
 
@@ -37,9 +37,9 @@ export async function getPostPaths(category?: string): Promise<string[]> {
 
 export async function getSortedPostList(
   category?: string
-): Promise<PostListItem[]> {
+): Promise<PostListItemProps[]> {
   const postPaths = await getPostPaths(category);
-  const postList: PostListItem[] = await Promise.all(
+  const postList: PostListItemProps[] = await Promise.all(
     postPaths.map(async (postPath) => {
       const [category, slug] = postPath.split("/").slice(-2);
       const url = `/posts/${category}/${slug}`;
