@@ -3,6 +3,7 @@ import { PostMainData } from "@/config/types";
 import { parseMarkdownHeading } from "@/lib/utilis";
 import useScrollSpy from "@/hook/useScrollSpy";
 import TableOfContentItem from "./TableOfContentItem";
+import ScrollToTopButton from "./ScrollToTopBtn";
 
 export default function TableOfContent({ content }: PostMainData) {
   const headings = content
@@ -30,7 +31,7 @@ export default function TableOfContent({ content }: PostMainData) {
     <aside className="lg:absolute lg:left-full lg:translate-x-10 h-full">
       <div className="lg:sticky lg:top-[50px] lg:min-w-[250px] text-[0.8rem]">
         <h3 className="font-semibold text-[1.1rem]">On This Page</h3>
-        <div className="mt-3 lg:mb-[30px] leading-[2em]">
+        <div className="mt-3 mb-[30px] lg:mb-4 leading-[2em]">
           {headings.map((heading, index) => {
             const { depth, headingLink, headingText } =
               parseMarkdownHeading(heading);
@@ -44,6 +45,10 @@ export default function TableOfContent({ content }: PostMainData) {
               </div>
             );
           })}
+        </div>
+        <hr className="lg:hidden" />
+        <div className="hidden lg:block ml-5">
+          <ScrollToTopButton />
         </div>
       </div>
     </aside>
