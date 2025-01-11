@@ -14,6 +14,9 @@ export const metadata = {
     siteName: BLOG_NAME,
     type: "website",
   },
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 const gothic = Gothic_A1({
