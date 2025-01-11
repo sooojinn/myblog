@@ -40,7 +40,8 @@ export async function getPostPaths(category?: string): Promise<string[]> {
 }
 
 export async function getSortedPostList(
-  category?: string
+  category?: string,
+  tag?: string
 ): Promise<PostListItemProps[]> {
   const postPaths = await getPostPaths(category);
   const postList: PostListItemProps[] = await Promise.all(
@@ -58,6 +59,10 @@ export async function getSortedPostList(
   const sortedPostList = postList.sort((a, b) => {
     return a.date < b.date ? 1 : -1; // 날짜 기준 정렬
   });
+
+  if (tag) {
+    return sortedPostList.filter((post) => post.tags?.includes(tag)); // 태그 필터링
+  }
 
   return sortedPostList;
 }
@@ -95,4 +100,15 @@ export async function getRenderedCategoryList(): Promise<string[]> {
   );
 
   return renderedCategoryList;
+}
+
+export async function getAllTags() {
+  const allPostMetaData = await getSortedPostList();
+  const allTags = allPostMetaData
+    .map((el) => el.tags)
+    .flat()
+    .filter((el) => el !== undefined);
+  const uniqueTags = [...new Set(allTags)];
+
+  return uniqueTags;
 }

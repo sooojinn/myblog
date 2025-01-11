@@ -6,9 +6,5 @@ export default async function Posts({
   searchParams: { [tag: string]: string };
 }) {
   const tag = searchParams["tag"];
-  return (
-    <>
-      <PostListPage tag={tag} />
-    </>
-  );
+  return <PostListPage tag={tag} />;
 }

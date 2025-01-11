@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import AsideItemTitle from "./AsideItemTitle";
 
 interface Props {
@@ -10,10 +10,12 @@ interface Props {
 
 export default function CategoryList({ renderedCategoryList }: Props) {
   const pathname = usePathname();
+  const params = useSearchParams();
   const pathParameters = pathname.split("/");
+  const tagParam = params.get("tag");
   let currentCategory = pathParameters[2];
 
-  if (pathname === "/posts") {
+  if (pathname === "/posts" && !tagParam) {
     currentCategory = "all";
   }
 
