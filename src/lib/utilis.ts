@@ -18,3 +18,8 @@ export function extractPreviewContent(markdown: string) {
     .trim()
     .slice(0, 200); // 최대 200자 반환
 }
+
+export function formatDate(dateString: string) {
+  const [year, month, day] = dateString.split("-");
+  return `${year}년 ${month}월 ${day}일`;
+}
