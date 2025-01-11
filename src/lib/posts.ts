@@ -22,7 +22,7 @@ export async function getPostMetaData(
   slug: string
 ): Promise<PostMetaData> {
   const parsedData = parseMdxFile(category, slug);
-  return parsedData.data;
+  return { ...parsedData.data, category };
 }
 
 export async function getPostMainText(

@@ -2,6 +2,7 @@ import { getPostMetaData, getPostMainText, getPostPaths } from "@/lib/posts";
 import PostHeader from "@/components/PostHeader";
 import PostBody from "@/components/PostBody";
 import TableOfContent from "@/components/TableOfContent";
+import ScrollProgressBar from "@/components/ScrollProgressBar";
 
 interface Props {
   params: {
@@ -25,6 +26,7 @@ export default async function PostDetail({ params }: Props) {
 
   return (
     <section className="w-full relative">
+      <ScrollProgressBar />
       <PostHeader {...postMetaData} />
       <TableOfContent content={postMainText} />
       <PostBody content={postMainText} />
