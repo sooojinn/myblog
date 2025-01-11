@@ -11,9 +11,10 @@ export function parseMarkdownHeading(str: string) {
 
 export function extractPreviewContent(markdown: string) {
   return markdown
-    .replace(/^#{1,6}\s.*$/gm, "")
-    .replace(/<[^>]*>/g, "")
-    .replace(/\s+/g, " ")
+    .replace(/^#{1,6}\s.*$/gm, "") // 헤더 제거
+    .replace(/\(https?:\/\/[^\s)]+\)/g, "") // (https://... ) 패턴 제거
+    .replace(/<[^>]*>/g, "") // HTML 태그 제거
+    .replace(/\s+/g, " ") // 공백 정리
     .trim()
-    .slice(0, 100);
+    .slice(0, 200); // 최대 200자 반환
 }

@@ -19,7 +19,9 @@ export function PostListItem({
       <h2 className="break-keep leading-[1.5] text-[1.2rem] font-bold">
         {title}
       </h2>
-      <p className="text-gray-400 text-[0.9rem] my-[0.4em]">{previewContent}</p>
+      <p className="line-clamp-3 text-gray-400 text-[0.85rem]">
+        {previewContent}
+      </p>
       <div className="flex gap-1.5">
         {tags?.map((tag) => (
           // 이벤트 막기
