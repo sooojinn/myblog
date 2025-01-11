@@ -13,8 +13,8 @@ export default async function Tags() {
     <div>
       <AsideItemTitle>🏷️ Tags</AsideItemTitle>
       <div className="flex gap-1 flex-wrap">
-        {uniqueTags.map((tag) => (
-          <Tag key={tag}>{tag}</Tag>
+        {uniqueTags.map((tag, index) => (
+          <Tag key={index}>{tag}</Tag>
         ))}
       </div>
     </div>

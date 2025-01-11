@@ -45,7 +45,7 @@ export default function DropDownMenu({
 
   return (
     <div
-      className="bg-background w-[130px] border border-gray-300 dark:border-gray-800 rounded-[4px] p-[7px] mt-5 mb-2.5 relative md:hidden"
+      className="bg-background w-[130px] border border-gray-300 dark:border-gray-800 rounded-[4px] p-[7px] mt-5 mb-2.5 relative"
       onClick={handleInputClick}
       onBlur={handleBlur}
       ref={inputRef}

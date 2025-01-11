@@ -23,9 +23,9 @@ export function PostListItem({
         {previewContent}
       </p>
       <div className="flex gap-1.5">
-        {tags?.map((tag) => (
+        {tags?.map((tag, index) => (
           // 이벤트 막기
-          <Tag key={tag}>{tag}</Tag>
+          <Tag key={index}>{tag}</Tag>
         ))}
       </div>
       <p className="text-[0.9rem] text-gray-400">{date}</p>

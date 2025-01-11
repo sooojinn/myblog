@@ -2,18 +2,16 @@
 
 import { useState } from "react";
 import { PostListItemProps } from "@/config/types";
-import { PostListCategory } from "./PostListCategory";
 import { PostListItem } from "./PostListItem";
 import { PageNumBtns } from "./PageNumBtns";
 
 const POST_PER_PAGE = 5;
 
 interface Props {
-  renderedCategory: string;
   postList: PostListItemProps[];
 }
 
-export default function PostList({ renderedCategory, postList }: Props) {
+export default function PostList({ postList }: Props) {
   const totalPage = Math.ceil(postList.length / POST_PER_PAGE);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -25,9 +23,6 @@ export default function PostList({ renderedCategory, postList }: Props) {
 
   return (
     <section>
-      <div className="hidden md:block">
-        <PostListCategory category={renderedCategory} />
-      </div>
       <div className="pb-[4vh]">
         {postListInPage.map((post, index) => (
           <PostListItem {...post} key={index} />
