@@ -5,20 +5,17 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 interface Props {
-  currentCategory?: string;
-  renderedCategoryList: string[];
+  currentOption?: string;
+  options: string[];
 }
 
-export default function DropDownMenu({
-  currentCategory,
-  renderedCategoryList,
-}: Props) {
+export default function DropDownMenu({ currentOption, options }: Props) {
   const { isOpen, toggle, close, dropDownRef } = useDropdown();
 
-  const selectedCategory = renderedCategoryList.find((renderedCategory) => {
-    const category = renderedCategory.split(" ")[0].toLowerCase();
+  const selectedOption = options.find((categoryWithCount) => {
+    const category = categoryWithCount.split(" ")[0].toLowerCase();
 
-    return (currentCategory || "all") === category;
+    return (currentOption || "all") === category;
   });
 
   const params = useSearchParams();
@@ -32,7 +29,7 @@ export default function DropDownMenu({
       ref={dropDownRef}
     >
       <div className="flex justify-between items-center cursor-pointer">
-        {tag ? <span className="text-gray-400">선택</span> : selectedCategory}
+        {tag ? <span className="text-gray-400">선택</span> : selectedOption}
         <span
           className={`${
             isOpen ? "!transform !rotate-0" : ""
@@ -46,19 +43,19 @@ export default function DropDownMenu({
           isOpen ? "!flex" : ""
         } hidden flex-col bg-background text-[0.9rem] p-[7px] border border-gray-300 dark:border-gray-800 rounded-bl-[4px] rounded-br-[4px] border-t-0 absolute right-[-1px] left-[-1px]`}
       >
-        {renderedCategoryList.map((renderedCategory) => {
-          const category = renderedCategory.split(" ")[0].toLowerCase();
+        {options.map((categoryWithCount) => {
+          const category = categoryWithCount.split(" ")[0].toLowerCase();
           return (
             <Link
               href={`/posts/${category === "all" ? "" : category}`}
               key={category}
               className={`${
-                category === (currentCategory || "all")
+                category === (currentOption || "all")
                   ? "bg-gray-100 dark:bg-gray-800"
                   : ""
               } hover:bg-gray-100 dark:hover:bg-gray-800 p-[4px_7px]`}
             >
-              {renderedCategory}
+              {categoryWithCount}
             </Link>
           );
         })}

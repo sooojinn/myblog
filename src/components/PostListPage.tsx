@@ -1,6 +1,6 @@
 import PostList from "./PostList";
 import {
-  getRenderedCategoryList,
+  getCategoryWithCount,
   getSortedPostList,
   renderCategory,
 } from "@/lib/posts";
@@ -16,9 +16,9 @@ interface Props {
 
 const PostListPage = async ({ category, tag }: Props) => {
   const postList = await getSortedPostList(category, tag);
-  const renderedCategory = await renderCategory(category);
-  const renderedCategoryList = await getRenderedCategoryList();
-  const postListTitle = tag ? `#${tag}` : renderedCategory;
+  const categoryWithCount = await renderCategory(category);
+  const categoryWithCountList = await getCategoryWithCount();
+  const postListTitle = tag ? `#${tag}` : categoryWithCount;
 
   return (
     <section className="flex-grow md:grid md:grid-cols-[auto_200px]">
@@ -26,8 +26,8 @@ const PostListPage = async ({ category, tag }: Props) => {
         <div className="md:hidden">
           <Suspense fallback={<div>페이지 로딩 중...</div>}>
             <DropDownMenu
-              currentCategory={category}
-              renderedCategoryList={renderedCategoryList}
+              currentOption={category}
+              options={categoryWithCountList}
             />
           </Suspense>
         </div>

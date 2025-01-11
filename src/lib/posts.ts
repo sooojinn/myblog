@@ -88,18 +88,18 @@ export function changeCategoryName(category: string): string {
 export async function renderCategory(category?: string): Promise<string> {
   const changedCategory = changeCategoryName(category || "all");
   const count = await countPosts(category);
-  const renderedCategory = `${changedCategory} (${count})`;
-  return renderedCategory;
+  const categoryWithCount = `${changedCategory} (${count})`;
+  return categoryWithCount;
 }
 
-export async function getRenderedCategoryList(): Promise<string[]> {
+export async function getCategoryWithCount(): Promise<string[]> {
   const categoryList = getCategoryList();
   categoryList.unshift("");
-  const renderedCategoryList = await Promise.all(
+  const categoryWithCountList = await Promise.all(
     categoryList.map((category) => renderCategory(category))
   );
 
-  return renderedCategoryList;
+  return categoryWithCountList;
 }
 
 export async function getAllTags() {
