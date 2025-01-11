@@ -2,6 +2,7 @@
 
 import { useDropdown } from "@/hook/useDropDown";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 interface Props {
   currentCategory?: string;
@@ -20,6 +21,9 @@ export default function DropDownMenu({
     return (currentCategory || "all") === category;
   });
 
+  const params = useSearchParams();
+  const tag = params.get("tag");
+
   return (
     <div
       className="bg-background w-[130px] border border-gray-300 dark:border-gray-800 rounded-[4px] p-[7px] mt-5 mb-2.5 relative"
@@ -28,7 +32,7 @@ export default function DropDownMenu({
       ref={dropDownRef}
     >
       <div className="flex justify-between items-center cursor-pointer">
-        {selectedCategory}
+        {tag ? <span className="text-gray-400">선택</span> : selectedCategory}
         <span
           className={`${
             isOpen ? "!transform !rotate-0" : ""

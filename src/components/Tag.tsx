@@ -11,12 +11,13 @@ export default function Tag({
 }) {
   const router = useRouter();
 
-  const handleTagClick = (tag: string) => {
+  const handleTagClick = (e: React.MouseEvent<HTMLDivElement>, tag: string) => {
+    e.preventDefault();
     router.push(`/posts?tag=${tag}`);
   };
   return (
     <div
-      onClick={() => handleTagClick(children)}
+      onClick={(e) => handleTagClick(e, children)}
       className={`rounded-md text-[0.9em] px-1.5 py-1 hover:cursor-pointer ${
         isActive ? "bg-main text-white" : "bg-gray-200 text-main"
       }`}
