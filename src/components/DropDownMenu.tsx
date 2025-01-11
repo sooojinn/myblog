@@ -1,7 +1,7 @@
 "use client";
 
+import { useDropdown } from "@/hook/useDropDown";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
 
 interface Props {
   currentCategory?: string;
@@ -12,30 +12,7 @@ export default function DropDownMenu({
   currentCategory,
   renderedCategoryList,
 }: Props) {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const inputRef = useRef<HTMLDivElement>(null);
-
-  const handleInputClick = () => {
-    setIsOpen((prevIsOpen) => !prevIsOpen);
-  };
-
-  const handleBlur = () => {
-    setIsOpen(false);
-  };
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent): void {
-      const isInside = inputRef.current?.contains(e.target as Node);
-      if (!isInside) {
-        setIsOpen(false);
-      }
-    }
-    setIsOpen(false);
-    window.addEventListener("click", handleClickOutside);
-    return () => {
-      window.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
+  const { isOpen, toggle, close, dropDownRef } = useDropdown();
 
   const selectedCategory = renderedCategoryList.find((renderedCategory) => {
     const category = renderedCategory.split(" ")[0].toLowerCase();
@@ -46,9 +23,9 @@ export default function DropDownMenu({
   return (
     <div
       className="bg-background w-[130px] border border-gray-300 dark:border-gray-800 rounded-[4px] p-[7px] mt-5 mb-2.5 relative"
-      onClick={handleInputClick}
-      onBlur={handleBlur}
-      ref={inputRef}
+      onClick={toggle}
+      onBlur={close}
+      ref={dropDownRef}
     >
       <div className="flex justify-between items-center cursor-pointer">
         {selectedCategory}

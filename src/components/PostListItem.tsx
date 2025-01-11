@@ -24,7 +24,7 @@ export function PostListItem({
         {previewContent}
       </p>
       <PostDate>{date}</PostDate>
-      <div className="flex gap-1.5">
+      <div className="flex flex-wrap gap-1.5">
         {tags?.map((tag, index) => (
           <Tag key={index}>{tag}</Tag>
         ))}
