@@ -24,7 +24,6 @@ export function PostListItem({
       </p>
       <div className="flex gap-1.5">
         {tags?.map((tag, index) => (
-          // 이벤트 막기
           <Tag key={index}>{tag}</Tag>
         ))}
       </div>

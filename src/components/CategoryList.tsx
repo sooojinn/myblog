@@ -10,10 +10,11 @@ interface Props {
 
 export default function CategoryList({ renderedCategoryList }: Props) {
   const pathname = usePathname();
-  const params = useSearchParams();
   const pathParameters = pathname.split("/");
-  const tagParam = params.get("tag");
   let currentCategory = pathParameters[2];
+
+  const params = useSearchParams();
+  const tagParam = params.get("tag");
 
   if (pathname === "/posts" && !tagParam) {
     currentCategory = "all";
