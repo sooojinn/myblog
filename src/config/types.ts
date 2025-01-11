@@ -1,7 +1,6 @@
 export interface PostMetaData {
   title: string;
   date: string;
-  desc: string;
   tags: string[];
 }
 
