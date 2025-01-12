@@ -14,9 +14,12 @@ export function extractPreviewContent(markdown: string) {
     .replace(/^#{1,6}\s.*$/gm, "") // 헤더 제거
     .replace(/\(https?:\/\/[^\s)]+\)/g, "") // (https://... ) 패턴 제거
     .replace(/<[^>]*>/g, "") // HTML 태그 제거
+    .replace(/\*\*(.*?)\*\*/g, "$1") // ** 굵게 제거
+    .replace(/[\[\]]/g, "") // 대괄호 제거
+    .replace(/`([^`]*)`/g, "$1") // 백틱 제거
     .replace(/\s+/g, " ") // 공백 정리
     .trim()
-    .slice(0, 200); // 최대 200자 반환
+    .slice(0, 300); // 최대 300자 반환
 }
 
 export function formatDate(dateString: string) {

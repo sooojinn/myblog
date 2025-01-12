@@ -20,7 +20,7 @@ export function PostListItem({
       <h2 className="break-keep leading-[1.5] text-[1.2rem] font-bold">
         {title}
       </h2>
-      <p className="line-clamp-3 text-gray-400 text-[0.85rem] leading-[1.3rem]">
+      <p className="line-clamp-3 text-gray-400 text-[0.85rem] leading-[1.3rem] break-all">
         {previewContent}
       </p>
       <PostDate>{date}</PostDate>
