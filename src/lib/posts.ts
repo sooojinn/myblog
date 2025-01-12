@@ -8,7 +8,7 @@ import { extractPreviewContent } from "./utilis";
 const postsDirectory = path.join(process.cwd(), "posts");
 
 function parseMdxFile(category: string, slug: string): PostData {
-  const filePath = path.join(postsDirectory, category, slug);
+  const filePath = path.join(postsDirectory, category, `${slug}.mdx`);
   const contents = fs.readFileSync(filePath, "utf8");
   const parsedData = matter(contents);
   return {
@@ -36,7 +36,9 @@ export async function getPostMainText(
 export async function getPostPaths(category?: string): Promise<string[]> {
   const folder = category || "**";
   const postPaths = sync(`${postsDirectory}/${folder}/*.mdx`);
-  return postPaths;
+  return postPaths.map((postPath) =>
+    postPath.replace(`${postsDirectory}/`, "").replace(/\.mdx$/, "")
+  );
 }
 
 export async function getSortedPostList(
