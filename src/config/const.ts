@@ -21,3 +21,8 @@ export const BLOG_KEYWORDS = [
   "Next.js",
   "Tailwind CSS",
 ];
+
+export const navList = [
+  { label: "about", href: "/about" },
+  { label: "post", href: "/posts" },
+];

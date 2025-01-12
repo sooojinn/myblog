@@ -5,10 +5,10 @@ import { usePathname, useSearchParams } from "next/navigation";
 import AsideItemTitle from "./AsideItemTitle";
 
 interface Props {
-  categoryWithCountList: string[];
+  categoryList: string[];
 }
 
-export default function CategoryList({ categoryWithCountList }: Props) {
+export default function CategoryList({ categoryList }: Props) {
   const pathname = usePathname();
   const pathParameters = pathname.split("/");
   let currentCategory = pathParameters[2];
@@ -24,7 +24,7 @@ export default function CategoryList({ categoryWithCountList }: Props) {
     <nav className="flex flex-col justify-start items-start">
       <AsideItemTitle>📁 Categories</AsideItemTitle>
       <div className="flex flex-col gap-[3px]">
-        {categoryWithCountList.map((categoryWithCount) => {
+        {categoryList.map((categoryWithCount) => {
           const category = categoryWithCount.split(" ")[0].toLowerCase();
           return (
             <Link

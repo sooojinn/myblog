@@ -37,7 +37,7 @@ const PostListPage = async ({ category, tag }: Props) => {
         <PostList postList={postList} />
       </div>
       <div className="hidden md:block">
-        <Aside />
+        <Aside categoryList={categoryWithCountList} />
       </div>
     </section>
   );
