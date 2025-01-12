@@ -2,6 +2,7 @@ export interface PostMetaData {
   title: string;
   date: string;
   tags: string[];
+  keywords: string[];
   category: string;
 }
 

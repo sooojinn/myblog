@@ -23,7 +23,7 @@ export default function PostList({ postList }: Props) {
 
   return (
     <section>
-      <div className="pb-[4vh]">
+      <div className="flex flex-col gap-3 pb-[4vh]">
         {postListInPage.map((post, index) => (
           <PostListItem {...post} key={index} />
         ))}
