@@ -7,9 +7,13 @@ interface Props extends ThemeProviderProps {
   children: React.ReactNode;
 }
 
-export function ThemeProvider({ children, ...props }: Props) {
+export function ThemeProvider({ children }: Props) {
   return (
-    <NextThemesProvider enableSystem={true} attribute="class" {...props}>
+    <NextThemesProvider
+      enableSystem={true}
+      attribute="class"
+      defaultTheme="system"
+    >
       {children}
     </NextThemesProvider>
   );
