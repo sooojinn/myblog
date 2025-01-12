@@ -42,6 +42,13 @@ module.exports = {
               color: "var(--code-color)",
               padding: "0.15em 0.4em",
               borderRadius: "4px",
+              fontWeight: "regular",
+            },
+            aside: {
+              backgroundColor: "var(--callout-bg)",
+              padding: "5px 20px",
+              margin: "20px 0px",
+              borderRadius: "5px",
             },
           },
         },
