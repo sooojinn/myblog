@@ -27,6 +27,6 @@ export function formatDate(dateString: string) {
   return `${year}년 ${month}월 ${day}일`;
 }
 
-export function capitalizeCategory(category: string): string {
-  return category[0].toUpperCase() + category.slice(1, category.length);
+export function capitalizeFirstLetter(str: string): string {
+  return str[0].toUpperCase() + str.slice(1, str.length);
 }

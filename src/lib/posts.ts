@@ -8,7 +8,7 @@ import {
   PostListItemProps,
   CategoryAndLabel,
 } from "@/config/types";
-import { capitalizeCategory, extractPreviewContent } from "./utilis";
+import { capitalizeFirstLetter, extractPreviewContent } from "./utilis";
 
 const postsDirectory = path.join(process.cwd(), "posts");
 
@@ -91,7 +91,7 @@ export async function countPosts(category?: string): Promise<number> {
 export async function generateCategoryLabel(
   category?: string
 ): Promise<string> {
-  const capitalizedCategory = capitalizeCategory(category || "all");
+  const capitalizedCategory = capitalizeFirstLetter(category || "all");
   const count = await countPosts(category);
   const categoryLabel = `${capitalizedCategory} (${count})`;
   return categoryLabel;

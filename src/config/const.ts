@@ -22,6 +22,8 @@ export const BLOG_KEYWORDS = [
   "Tailwind CSS",
 ];
 
+export const GITHUB_LINK = "https://github.com/sooojinn";
+
 export const navList = [
   { label: "about", href: "/about" },
   { label: "post", href: "/posts" },
