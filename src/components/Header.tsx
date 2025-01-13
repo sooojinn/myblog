@@ -5,16 +5,19 @@ import FullWidthHrLine from "./FullWidthHrLine";
 import SlideMenuBtn from "./SlideMenuBtn";
 import NavBar from "./NavBar";
 import { getAllTags, getCategoryLabelList } from "@/lib/posts";
+import { Suspense } from "react";
 
 export default async function Header() {
   const categoryList = await getCategoryLabelList();
   const tags = await getAllTags();
 
   return (
-    <div className="bg-background w-full flex flex-col px-[5vw] z-20">
+    <div className="w-full flex flex-col px-[5vw] z-20">
       <header className="bg-inherit px-inherit h-[60px] md:h-[100px] flex justify-between items-center">
         <div className="md:hidden">
-          <SlideMenuBtn categoryList={categoryList} tags={tags} />
+          <Suspense>
+            <SlideMenuBtn categoryList={categoryList} tags={tags} />
+          </Suspense>
         </div>
         <Link href="/">
           <h1 className="text-[1.3rem] md:text-[1.7rem] font-bold">
