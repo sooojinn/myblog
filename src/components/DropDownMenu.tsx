@@ -6,17 +6,11 @@ import { useSearchParams } from "next/navigation";
 
 interface Props {
   currentOption?: string;
-  options: string[];
+  options: { category: string; label: string }[];
 }
 
 export default function DropDownMenu({ currentOption, options }: Props) {
   const { isOpen, toggle, close, dropDownRef } = useDropdown();
-
-  const selectedOption = options.find((categoryWithCount) => {
-    const category = categoryWithCount.split(" ")[0].toLowerCase();
-
-    return (currentOption || "all") === category;
-  });
 
   const params = useSearchParams();
   const tag = params.get("tag");
@@ -29,7 +23,7 @@ export default function DropDownMenu({ currentOption, options }: Props) {
       ref={dropDownRef}
     >
       <div className="flex justify-between items-center cursor-pointer">
-        {tag ? <span className="text-gray-400">선택</span> : selectedOption}
+        {tag ? <span className="text-gray-400">선택</span> : ""}
         <span
           className={`${
             isOpen ? "!transform !rotate-0" : ""
@@ -43,8 +37,7 @@ export default function DropDownMenu({ currentOption, options }: Props) {
           isOpen ? "!flex" : ""
         } hidden flex-col bg-background text-[0.9rem] p-[7px] border border-gray-300 dark:border-gray-800 rounded-bl-[4px] rounded-br-[4px] border-t-0 absolute right-[-1px] left-[-1px]`}
       >
-        {options.map((categoryWithCount) => {
-          const category = categoryWithCount.split(" ")[0].toLowerCase();
+        {options.map(({ category, label }) => {
           return (
             <Link
               href={`/posts/${category === "all" ? "" : category}`}
@@ -55,7 +48,7 @@ export default function DropDownMenu({ currentOption, options }: Props) {
                   : ""
               } hover:bg-gray-100 dark:hover:bg-gray-800 p-[4px_7px]`}
             >
-              {categoryWithCount}
+              {label}
             </Link>
           );
         })}

@@ -2,8 +2,13 @@ import fs from "fs";
 import path from "path";
 import { sync } from "glob";
 import matter from "gray-matter";
-import { PostData, PostMetaData, PostListItemProps } from "@/config/types";
-import { extractPreviewContent } from "./utilis";
+import {
+  PostData,
+  PostMetaData,
+  PostListItemProps,
+  CategoryAndLabel,
+} from "@/config/types";
+import { capitalizeCategory, extractPreviewContent } from "./utilis";
 
 const postsDirectory = path.join(process.cwd(), "posts");
 
@@ -83,25 +88,26 @@ export async function countPosts(category?: string): Promise<number> {
   return sortedPostList.length;
 }
 
-export function changeCategoryName(category: string): string {
-  return category[0].toUpperCase() + category.slice(1, category.length);
-}
-
-export async function renderCategory(category?: string): Promise<string> {
-  const changedCategory = changeCategoryName(category || "all");
+export async function generateCategoryLabel(
+  category?: string
+): Promise<string> {
+  const capitalizedCategory = capitalizeCategory(category || "all");
   const count = await countPosts(category);
-  const categoryWithCount = `${changedCategory} (${count})`;
-  return categoryWithCount;
+  const categoryLabel = `${capitalizedCategory} (${count})`;
+  return categoryLabel;
 }
 
-export async function getCategoryWithCount(): Promise<string[]> {
+export async function getCategoryLabelList(): Promise<CategoryAndLabel[]> {
   const categoryList = getCategoryList();
   categoryList.unshift("");
-  const categoryWithCountList = await Promise.all(
-    categoryList.map((category) => renderCategory(category))
+  const categoryLabelList = await Promise.all(
+    categoryList.map(async (category) => {
+      const label = await generateCategoryLabel(category);
+      return { category, label };
+    })
   );
 
-  return categoryWithCountList;
+  return categoryLabelList;
 }
 
 export async function getAllTags() {

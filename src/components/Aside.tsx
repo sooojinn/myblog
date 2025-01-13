@@ -2,11 +2,12 @@ import CategoryList from "./CategoryList";
 import { getAllTags } from "@/lib/posts";
 import Tags from "./Tags";
 import { Suspense } from "react";
+import { CategoryAndLabel } from "@/config/types";
 
 export default async function Aside({
   categoryList,
 }: {
-  categoryList: string[];
+  categoryList: CategoryAndLabel[];
 }) {
   const allTags = await getAllTags();
 

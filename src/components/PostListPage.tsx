@@ -1,8 +1,8 @@
 import PostList from "./PostList";
 import {
-  getCategoryWithCount,
+  getCategoryLabelList,
   getSortedPostList,
-  renderCategory,
+  generateCategoryLabel,
 } from "@/lib/posts";
 import DropDownMenu from "./DropDownMenu";
 import Aside from "./Aside";
@@ -16,9 +16,9 @@ interface Props {
 
 const PostListPage = async ({ category, tag }: Props) => {
   const postList = await getSortedPostList(category, tag);
-  const categoryWithCount = await renderCategory(category);
-  const categoryWithCountList = await getCategoryWithCount();
-  const postListTitle = tag ? `#${tag}` : categoryWithCount;
+  const categoryLabel = await generateCategoryLabel(category);
+  const categoryLabelList = await getCategoryLabelList();
+  const postListTitle = tag ? `#${tag}` : categoryLabel;
 
   return (
     <section className="flex-grow md:grid md:grid-cols-[auto_200px]">
@@ -27,7 +27,7 @@ const PostListPage = async ({ category, tag }: Props) => {
           <Suspense fallback={<div>페이지 로딩 중...</div>}>
             <DropDownMenu
               currentOption={category}
-              options={categoryWithCountList}
+              options={categoryLabelList}
             />
           </Suspense>
         </div>
@@ -37,7 +37,7 @@ const PostListPage = async ({ category, tag }: Props) => {
         <PostList postList={postList} />
       </div>
       <div className="hidden md:block">
-        <Aside categoryList={categoryWithCountList} />
+        <Aside categoryList={categoryLabelList} />
       </div>
     </section>
   );

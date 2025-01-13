@@ -20,3 +20,8 @@ export interface PostListItemProps extends PostMetaData {
   url: string;
   previewContent: string;
 }
+
+export interface CategoryAndLabel {
+  category: string;
+  label: string;
+}
