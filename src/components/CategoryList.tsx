@@ -1,20 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
 import AsideItemTitle from "./AsideItemTitle";
 import { CategoryAndLabel } from "@/config/types";
+import useCurrentCategoryPath from "@/hook/useCurrentPath";
 
 interface Props {
   categoryList: CategoryAndLabel[];
 }
 
 export default function CategoryList({ categoryList }: Props) {
-  const pathname = usePathname();
-  const pathParameters = pathname.split("/");
-  let currentCategory = pathParameters[2] || "";
-
-  const params = useSearchParams();
+  const { currentCategory, currentTag } = useCurrentCategoryPath();
 
   return (
     <nav className="flex flex-col justify-start items-start">
@@ -25,7 +21,9 @@ export default function CategoryList({ categoryList }: Props) {
             <Link
               href={`/posts/${category}`}
               className={`${
-                currentCategory === category ? "!bg-main text-white" : ""
+                currentCategory === category && !currentTag
+                  ? "!bg-main text-white"
+                  : ""
               } w-fit p-[0.3em] rounded-[3px] hover:bg-gray-100 dark:hover:bg-gray-800
           `}
               key={label}

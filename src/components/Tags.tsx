@@ -1,12 +1,11 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import AsideItemTitle from "./AsideItemTitle";
 import Tag from "./Tag";
+import useCurrentCategoryPath from "@/hook/useCurrentPath";
 
 export default function Tags({ tags }: { tags: string[] }) {
-  const params = useSearchParams();
-  const currentTag = params.get("tag");
+  const { currentTag } = useCurrentCategoryPath();
   return (
     <div>
       <AsideItemTitle>🏷️ Tags</AsideItemTitle>
