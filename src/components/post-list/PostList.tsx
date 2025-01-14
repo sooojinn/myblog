@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PostListItemProps } from "@/config/types";
 import { PostListItem } from "./PostListItem";
 import { PageNumBtns } from "./PageNumBtns";
@@ -20,6 +20,10 @@ export default function PostList({ postList }: Props) {
   const postListInPage = postList.slice(startIndex, endIndex);
 
   const pageNumList = Array.from({ length: totalPage }, (_, i) => i + 1);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [currentPage]);
 
   return (
     <section>
