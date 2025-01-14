@@ -6,6 +6,7 @@ import BackgroundShadow from "./BackgroundShadow";
 import SlideMenu from "./SlideMenu";
 import { CategoryAndLabel } from "@/config/types";
 import { usePathname, useSearchParams } from "next/navigation";
+import Swipable from "./Swipable";
 
 export default function SlideMenuBtn({
   categoryList,
@@ -44,14 +45,16 @@ export default function SlideMenuBtn({
       <BsList size={20} className="hover:cursor-pointer" onClick={openMenu} />
       {isOpen && (
         <BackgroundShadow onClose={closeMenu} isVisible={isAnimating}>
-          <div
-            className={`fixed inset-y-0 left-0 bg-gray-100 dark:bg-gray-950 border-r dark:border-gray-800 z-50 transition-transform duration-300 ease-in-out ${
-              isAnimating ? "translate-x-0" : "-translate-x-full"
-            }`}
-            onClick={(event) => event.stopPropagation()}
-          >
-            <SlideMenu categoryList={categoryList} tags={tags} />
-          </div>
+          <Swipable onSwipeLeft={closeMenu}>
+            <div
+              className={`fixed inset-y-0 left-0 bg-gray-100 dark:bg-gray-950 border-r dark:border-gray-800 z-50 transition-transform duration-300 ease-in-out ${
+                isAnimating ? "translate-x-0" : "-translate-x-full"
+              }`}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <SlideMenu categoryList={categoryList} tags={tags} />
+            </div>
+          </Swipable>
         </BackgroundShadow>
       )}
     </>
