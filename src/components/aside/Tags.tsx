@@ -3,9 +3,11 @@
 import AsideItemTitle from "./AsideItemTitle";
 import Tag from "../post/Tag";
 import useCurrentCategoryPath from "@/hook/useCurrentPath";
+import { useStaticData } from "../context/StaticDataProvider";
 
-export default function Tags({ tags }: { tags: string[] }) {
+export default function Tags() {
   const { currentTag } = useCurrentCategoryPath();
+  const { allTags: tags } = useStaticData();
   return (
     <div>
       <AsideItemTitle>🏷️ Tags</AsideItemTitle>

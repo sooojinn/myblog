@@ -3,18 +3,11 @@
 import { useEffect, useState } from "react";
 import { BsList } from "react-icons/bs";
 import SlideMenu from "./SlideMenu";
-import { CategoryAndLabel } from "@/config/types";
 import { usePathname, useSearchParams } from "next/navigation";
 import BackgroundShadow from "../common/BackgroundShadow";
 import Swipable from "../common/Swipable";
 
-export default function SlideMenuBtn({
-  categoryList,
-  tags,
-}: {
-  categoryList: CategoryAndLabel[];
-  tags: string[];
-}) {
+export default function SlideMenuBtn() {
   const [isOpen, setIsOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -52,7 +45,7 @@ export default function SlideMenuBtn({
               }`}
               onClick={(event) => event.stopPropagation()}
             >
-              <SlideMenu categoryList={categoryList} tags={tags} />
+              <SlideMenu />
             </div>
           </Swipable>
         </BackgroundShadow>

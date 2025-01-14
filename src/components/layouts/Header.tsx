@@ -2,21 +2,17 @@ import Link from "next/link";
 import { BLOG_NAME, GITHUB_LINK } from "@/config/const";
 import ThemeToggle from "./theme/ThemeToggle";
 import NavBar from "./NavBar";
-import { getAllTags, getCategoryLabelList } from "@/lib/posts";
 import { Suspense } from "react";
 import SlideMenuBtn from "../slide-menu/SlideMenuBtn";
 import FullWidthHrLine from "../common/FullWidthHrLine";
 
 export default async function Header() {
-  const categoryList = await getCategoryLabelList();
-  const tags = await getAllTags();
-
   return (
     <div className="w-full flex flex-col px-[5vw] z-20">
       <header className="bg-inherit px-inherit h-[60px] md:h-[100px] flex justify-between items-center">
         <div className="md:hidden">
           <Suspense>
-            <SlideMenuBtn categoryList={categoryList} tags={tags} />
+            <SlideMenuBtn />
           </Suspense>
         </div>
         <Link href="/">

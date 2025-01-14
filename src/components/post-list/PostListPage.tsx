@@ -1,9 +1,5 @@
 import PostList from "./PostList";
-import {
-  getCategoryLabelList,
-  getSortedPostList,
-  generateCategoryLabel,
-} from "@/lib/posts";
+import { getSortedPostList, generateCategoryLabel } from "@/lib/posts";
 import Aside from "../aside/Aside";
 import { PostListTitle } from "./PostListTitle";
 
@@ -15,7 +11,6 @@ interface Props {
 const PostListPage = async ({ category, tag }: Props) => {
   const postList = await getSortedPostList(category, tag);
   const categoryLabel = await generateCategoryLabel(category);
-  const categoryLabelList = await getCategoryLabelList();
   const postListTitle = tag ? `#${tag}` : categoryLabel;
 
   return (
@@ -25,7 +20,7 @@ const PostListPage = async ({ category, tag }: Props) => {
         <PostList postList={postList} />
       </div>
       <div className="hidden md:block">
-        <Aside categoryList={categoryLabelList} />
+        <Aside />
       </div>
     </section>
   );

@@ -2,15 +2,12 @@
 
 import Link from "next/link";
 import AsideItemTitle from "./AsideItemTitle";
-import { CategoryAndLabel } from "@/config/types";
 import useCurrentCategoryPath from "@/hook/useCurrentPath";
+import { useStaticData } from "../context/StaticDataProvider";
 
-interface Props {
-  categoryList: CategoryAndLabel[];
-}
-
-export default function CategoryList({ categoryList }: Props) {
+export default function CategoryList() {
   const { currentCategory, currentTag } = useCurrentCategoryPath();
+  const { categoryLabelList: categoryList } = useStaticData();
 
   return (
     <nav className="flex flex-col justify-start items-start">

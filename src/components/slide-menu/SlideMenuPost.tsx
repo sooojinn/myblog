@@ -1,12 +1,9 @@
-import { CategoryAndLabel } from "@/config/types";
 import { SlideMenuItem } from "./SlideMenuItem";
 import { SlideMenuDropDown } from "./SlideMenuDropDown";
+import { useStaticData } from "../context/StaticDataProvider";
 
-export function SlideMenuPost({
-  categoryList,
-}: {
-  categoryList: CategoryAndLabel[];
-}) {
+export function SlideMenuPost() {
+  const { categoryLabelList: categoryList } = useStaticData();
   return (
     <SlideMenuDropDown title="Post">
       {...categoryList.map(({ label, category }) => (
