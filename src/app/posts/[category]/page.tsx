@@ -1,4 +1,4 @@
-import PostListPage from "@/components/PostListPage";
+import PostListPage from "@/components/post-list/PostListPage";
 import { getCategoryList } from "@/lib/posts";
 
 interface Props {

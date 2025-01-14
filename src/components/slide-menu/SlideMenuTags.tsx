@@ -1,6 +1,6 @@
 import useCurrentPath from "@/hook/useCurrentPath";
 import { SlideMenuDropDown } from "./SlideMenuDropDown";
-import Tag from "./Tag";
+import Tag from "../post/Tag";
 
 export function SlideMenuTags({ tags }: { tags: string[] }) {
   const { currentTag } = useCurrentPath();

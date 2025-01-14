@@ -1,7 +1,7 @@
 "use client";
 
 import AsideItemTitle from "./AsideItemTitle";
-import Tag from "./Tag";
+import Tag from "../post/Tag";
 import useCurrentCategoryPath from "@/hook/useCurrentPath";
 
 export default function Tags({ tags }: { tags: string[] }) {

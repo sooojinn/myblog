@@ -2,7 +2,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkBreaks from "remark-breaks";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
-import { MdxComponents } from "./MdxComponents";
+import { MdxComponents } from "../post/MdxComponents";
 
 export default function PostBody({ content }: { content: string }) {
   return (

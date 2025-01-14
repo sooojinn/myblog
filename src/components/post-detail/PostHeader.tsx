@@ -1,5 +1,5 @@
 import { PostMetaData } from "@/config/types";
-import PostDate from "./PostDate";
+import PostDate from "../post/PostDate";
 import { capitalizeFirstLetter } from "@/lib/utilis";
 import Link from "next/link";
 

@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { BsList } from "react-icons/bs";
-import BackgroundShadow from "./BackgroundShadow";
 import SlideMenu from "./SlideMenu";
 import { CategoryAndLabel } from "@/config/types";
 import { usePathname, useSearchParams } from "next/navigation";
-import Swipable from "./Swipable";
+import BackgroundShadow from "../common/BackgroundShadow";
+import Swipable from "../common/Swipable";
 
 export default function SlideMenuBtn({
   categoryList,

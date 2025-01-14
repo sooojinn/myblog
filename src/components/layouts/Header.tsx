@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { BLOG_NAME, GITHUB_LINK } from "@/config/const";
-import ThemeToggle from "./ThemeToggle";
-import FullWidthHrLine from "./FullWidthHrLine";
-import SlideMenuBtn from "./SlideMenuBtn";
+import ThemeToggle from "./theme/ThemeToggle";
 import NavBar from "./NavBar";
 import { getAllTags, getCategoryLabelList } from "@/lib/posts";
 import { Suspense } from "react";
+import SlideMenuBtn from "../slide-menu/SlideMenuBtn";
+import FullWidthHrLine from "../common/FullWidthHrLine";
 
 export default async function Header() {
   const categoryList = await getCategoryLabelList();

@@ -1,9 +1,9 @@
 import "./globals.css";
-import Header from "@/components/Header";
+import Header from "@/components/layouts/Header";
 import { BLOG_NAME, BLOG_DESC, BLOG_URL, BLOG_KEYWORDS } from "@/config/const";
-import Footer from "@/components/Footer";
+import Footer from "@/components/layouts/Footer";
 import { Gothic_A1 } from "next/font/google";
-import { ThemeProvider } from "@/components/ThemeProvider";
+import { ThemeProvider } from "@/components/layouts/theme/ThemeProvider";
 
 export const metadata = {
   title: BLOG_NAME,

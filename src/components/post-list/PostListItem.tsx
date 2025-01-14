@@ -1,7 +1,7 @@
 import { PostListItemProps } from "@/config/types";
 import Link from "next/link";
-import Tag from "./Tag";
-import PostDate from "./PostDate";
+import Tag from "../post/Tag";
+import PostDate from "../post/PostDate";
 
 export function PostListItem({
   url,

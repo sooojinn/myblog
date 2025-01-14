@@ -1,4 +1,4 @@
-import PostListPage from "@/components/PostListPage";
+import PostListPage from "@/components/post-list/PostListPage";
 
 export default async function Posts({
   searchParams,

@@ -4,7 +4,7 @@ import {
   getSortedPostList,
   generateCategoryLabel,
 } from "@/lib/posts";
-import Aside from "./Aside";
+import Aside from "../aside/Aside";
 import { PostListTitle } from "./PostListTitle";
 
 interface Props {

@@ -1,4 +1,4 @@
-import FullWidthHrLine from "./FullWidthHrLine";
+import FullWidthHrLine from "../common/FullWidthHrLine";
 
 export default function Footer() {
   return (

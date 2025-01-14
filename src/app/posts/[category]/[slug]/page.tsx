@@ -1,8 +1,8 @@
 import { getPostMetaData, getPostMainText, getPostPaths } from "@/lib/posts";
-import PostHeader from "@/components/PostHeader";
-import PostBody from "@/components/PostBody";
-import TableOfContent from "@/components/TableOfContent";
-import ScrollProgressBar from "@/components/ScrollProgressBar";
+import PostHeader from "@/components/post-detail/PostHeader";
+import PostBody from "@/components/post-detail/PostBody";
+import TableOfContent from "@/components/post-detail/TableOfContent";
+import ScrollProgressBar from "@/components/post-detail/ScrollProgressBar";
 import { BLOG_DESC, BLOG_KEYWORDS, BLOG_NAME, BLOG_URL } from "@/config/const";
 
 interface Props {
