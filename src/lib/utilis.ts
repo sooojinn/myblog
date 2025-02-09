@@ -15,8 +15,9 @@ export function extractPreviewContent(markdown: string) {
     .replace(/\(https?:\/\/[^\s)]+\)/g, "") // (https://... ) 패턴 제거
     .replace(/<[^>]*>/g, "") // HTML 태그 제거
     .replace(/\*\*(.*?)\*\*/g, "$1") // ** 굵게 제거
-    .replace(/[\[\]]/g, "") // 대괄호 제거
     .replace(/`([^`]*)`/g, "$1") // 백틱 제거
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "") // 마크다운 이미지 제거
+    .replace(/[\[\]]/g, "") // 대괄호 제거
     .replace(/\s+/g, " ") // 공백 정리
     .trim()
     .slice(0, 300); // 최대 300자 반환

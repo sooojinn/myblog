@@ -1,0 +1,120 @@
+---
+title: "createPortal을 이용해 컴포넌트의 렌더링 위치 변경하기"
+date: "2024-11-17"
+tags: ["룩엣더웨더", "createPortal", "react"]
+keywords: []
+---
+
+# 문제 상황
+
+react-swiper를 이용해 가로로 스크롤 할 수 있는 게시물 리스트를 구현했다. 그런데 게시물 사진의 하트를 눌렀을 때, 아래와 같이 css가 깨지는 문제가 생겼다.
+
+![1](/posts/react/createPortal/1.png)
+
+이 로그인 유도 모달은 하트 컴포넌트 내부에서 로그인 여부에 따라 조건부 렌더링 되는 모달이다. 디버깅해본 결과 react-swiper의 기본 css 속성 때문에 이렇게 예상치 못한 결과가 나온 것이라 판단했다. (react-swiper를 사용하지 않은 게시물 리스트에서는 이런 문제가 발생하지 않았다.)
+
+처음에는 css를 조작해 문제를 해결하려 했으나 쉽지 않았다. 모달 컴포넌트가 게시물 아이템 컴포넌트 외부에서 렌더링되면 자연스럽게 해결될 거라 생각했고, 부모 컴포넌트를 벗어나 다른 컴포넌트에서 렌더링하는 방법을 찾아보았다.
+
+# createPortal이란?
+
+[createPortal](https://react.dev/reference/react-dom/createPortal)은 리액트에서 **컴포넌트의 렌더링 위치를 변경**할 때 사용하는 API이다. 일반적으로 리액트 컴포넌트는 부모 컴포넌트의 DOM 트리에 렌더링되지만, `createPortal`을 사용하면 **부모 컴포넌트의 DOM 계층을 벗어나 다른 DOM 노드에 렌더링**할 수 있다.
+
+## 필요한 이유
+
+- 모달, 토스트, 드롭다운, 툴팁 같은 UI는 보통 `body` 최상단에 렌더링하는 것이 좋다.
+- `z-index` 문제를 해결하고, 특정 부모 요소의 `overflow: hidden` 같은 스타일에 영향을 받지 않도록 하기 위해 사용된다.
+
+## 그럼 이벤트 전파는요?
+
+- `createPortal`을 사용하더라도 리액트의 이벤트 버블링은 원래 컴포넌트 트리 내에서 정상적으로 동작
+- 즉, 모달 내부에서 발생한 클릭 이벤트가 부모 컴포넌트로 전파될 수 있음.
+
+## 사용법
+
+```jsx
+createPortal(children, domNode, key?)
+```
+
+1. **children**: 렌더링할 요소
+
+   - JSX 요소: `<div />`, `<SomeComponent />`
+   - 프래그먼트(Fragment): `<>...</>`
+   - 문자열 또는 숫자: `"Hello"`, `42`
+   - 위 요소들의 배열도 가능: `["Hello", <div key="1">World</div>]`
+
+2. **domNode**: 포털이 렌더링될 기존의 DOM 노드
+
+- 예시: `document.getElementById("modal-root")`
+- 주의할 점:
+  - 이미 존재하는 DOM 노드여야 함. (존재하지 않으면 에러 발생)
+  - 업데이트 시 다른 DOM 노드를 전달하면 포털 내용이 새롭게 다시 렌더링됨.
+
+3. **key**(선택): 포털의 key로 사용할 **고유한 문자열 또는 숫자**.
+
+- 포털이 여러 개 렌더링될 때 각각을 구분하는 데 도움을 줌.
+- 리액트가 포털을 최적화하여 불필요한 리렌더링을 방지할 수 있음.
+
+## 예시
+
+```jsx
+import { createPortal } from "react-dom";
+
+// ...
+
+<div>
+  <p>This child is placed in the parent div.</p>
+  {createPortal(
+    <p>This child is placed in the document body.</p>,
+    document.body
+  )}
+</div>;
+```
+
+`createPortal`을 직접 불러와도 되고, `ReactDom.createPortal` 형식으로 써도 된다!
+
+# 해결
+
+모달을 `document.body`에 렌더링하니 문제가 해결됐다!
+
+앞으로 모달을 설계할 땐 의도하지 않은 결과가 나오지 않도록 꼭 `createPortal`로 최상단에 렌더링해야겠다.
+
+```tsx
+"use client";
+
+import ReactDOM from "react-dom";
+import { ReactNode } from "react";
+import Text from "../atom/Text";
+import BackgroundShadow from "./BackgroundShadow";
+
+interface AlertModalProps {
+  boldMessage: ReactNode;
+  regularMessage: ReactNode;
+  buttons: ReactNode;
+}
+
+export default function AlertModal({
+  boldMessage,
+  regularMessage,
+  buttons,
+}: AlertModalProps) {
+  return ReactDOM.createPortal(
+    <BackgroundShadow>
+      <div className="min-w-[300px] bg-white p-6 flex flex-col text-center gap-6 rounded-2xl">
+        <div className="flex flex-col items-center text-center gap-4">
+          <Text size="l" weight="bold">
+            {boldMessage}
+          </Text>
+          <Text color="darkGray" className="flex flex-col gap-4">
+            {regularMessage}
+          </Text>
+        </div>
+
+        <div className="flex justify-center gap-2">{buttons}</div>
+      </div>
+    </BackgroundShadow>,
+    document.body
+  );
+}
+```
+
+![1](/posts/react/createPortal/2.jpeg)
