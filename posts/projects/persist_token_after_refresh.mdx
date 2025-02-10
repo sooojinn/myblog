@@ -1,0 +1,107 @@
+---
+title: "axios interceptor로 새로고침 시 메모리에 저장된 토큰이 초기화되는 문제 해결하기"
+date: "2025-02-08"
+tags: ["룩엣더웨더", "axios", "트러블 슈팅"]
+keywords: ["axios interceptor", "access token", "토큰 새로고침", "사용자 인증"]
+---
+
+# 문제
+
+access token은 메모리에 refresh token은 HttpOnly 쿠키에 저장하여 인증 로직을 구현했다. access token을 메모리에 저장하면 토큰 탈취 위험을 최소화한다는 장점이 있지만 **새로고침 시 메모리에 저장된 access token이 초기화**된다는 문제점이 있다.
+
+이를 해결하기 위해 api 요청을 보냈을 때 access token이 만료됐다는 에러 또는 access token이 없다는 에러를 반환하면 토큰 재발급 요청을 보내 새로운 토큰을 받아오고 다시 본래 요청을 보내는 방식으로 구현했다.
+
+이 방법은 사용자가 로그인을 해야만 모든 서비스를 이용할 수 있었을 땐 문제가 없었다. 그런데 유저 피드백을 받고 몇몇 기능(게시물 조회 등)은 로그인하지 않은 사용자도 이용 가능하게 기획 방향을 수정한 후엔 문제가 생겼다. 로그인한 상태에서 게시물을 보다가 새로고침을 하면 좋아요 여부가 초기화 됐다.
+
+# 원인
+
+네트워크 탭에서 새로고침 후 즉시 실행되는 api 요청 내용을 확인해보니 access token이 없는 채로 요청을 보내고 있었다.
+
+1. 로그인한 상태에서 새로고침
+2. access token 초기화
+3. access token 없이 api 요청 보냄
+4. access token이 없어도 괜찮은 api(로그인하지 않은 사용자도 이용할 수 있는 api)는 성공 응답을 보냄
+5. **사용자 인증 정보가 없는 상태에서 요청을 보냈으므로 로그인하지 않은 상태에서 요청을 보냈을 때의 응답과 같은 응답을 반환**
+6. 좋아요 여부가 풀림
+
+**access token이 없어도 에러를 반환하지 않으니 이전에 구현했던 토큰 재발급 로직이 적용되지 않는 것이 원인**이었다. 이 문제를 해결하기 위해선 로그인한 상태지만 저장된 토큰이 없는 경우(즉, 로그인한 상태에서 새로고침 하여 토큰이 초기화된 경우) **토큰 재발급 요청을 먼저 보내고, 이후 사용자 인증 정보에 따라 데이터가 달라지는 api 요청을 보내야 했다.**
+
+---
+
+# 생각한 방법
+
+## 토큰 재발급 기능을 담당하는 컴포넌트 추가?
+
+최상단 컴포넌트에 새로고침 시 토큰 재발급 요청을 보내는 로직이 담긴 컴포넌트를 추가하면 되겠다고 생각했다. 하지만 당연하게도 api 요청은 모두 비동기로 실행되기 때문에 이 방법으론 실행 순서를 보장할 수 없었다. 토큰 재발급 요청이 성공한 후 다른 api 요청을 보내야 하는데 실행 순서가 뒤죽박죽이었다.
+
+실행 순서를 보장하기 위해 리액트 쿼리의 enabled 옵션과 Zustand의 상태 구독 기능을 활용하는 방법을 생각했다. 모듈 내부 로컬 변수로 관리되는 access token을 Zustand 전역 상태로 관리하고 api 요청을 보내는 컴포넌트에서 상태를 구독한다. 그리고 리액트 쿼리의 enabled 옵션으로 로그인 여부와 토큰 값 존재 여부가 모두 true일 때만 쿼리가 실행되게 한다. 이렇게 하면 새로고침 직후 토큰을 재발급 받기 전까지는 enabled가 false이기 때문에 쿼리가 실행되지 않는다. 그리고 토큰을 받아와 상태 값이 바뀌면 해당 상태를 구독하는 컴포넌트가 리렌더링되므로 enabled가 true가 되면서 쿼리가 실행된다. 그러면 실행 순서를 보장할 수 있을 거라고 생각했다.
+
+하지만 이 방법의 문제점은 access token을 전역 상태로 관리하여 보안에 더 취약해진다는 점(그래도 메모리에 저장하는 거라 큰 차이는 없다고 생각), 쿼리를 실행하는 컴포넌트마다 토큰 상태 구독 + enabled 옵션 코드를 추가해야 해야 해서 중복 코드가 늘어난다는 점이다.
+
+# axios interceptor로 해결
+
+axios interceptor는 **HTTP 요청(Request) 또는 응답(Response)을 가로채서 중간에서 가공하거나 로직을 추가할 수 있도록 도와주는 기능**이다. 공통적인 요청/응답 처리 로직을 한 곳에서 관리할 수 있다. (구체적인 사용법 설명은 생략)
+
+원래는 응답 인터셉터에서만 토큰 재발급 로직을 구현했었는데, 요청 인터셉터에서도 특정한 경우 토큰 재발급 로직이 실행되도록 추가하면 api 실행 순서를 보장할 수 있다.
+
+우선 새로고침 후 토큰 재발급이 필요한 api와 아닌 api를 구분하기 위해 `restoreTokenInstance`를 따로 만들었다. 옵션은 다른 인스턴스와 같다.
+
+```tsx
+export const restoreTokenInstance = axios.create({
+  baseURL: BASEURL,
+  timeout: 10000,
+});
+```
+
+그리고 `restoreTokenInstance`의 요청 인터셉터에 토큰 재발급 로직을 구현했다.
+
+```tsx
+// 새로고침 후 토큰 재발급 로직이 필요한 인스턴스
+restoreTokenInstance.interceptors.request.use(
+  async (config) => {
+    const isLogin = useAuthStore.getState().isLogin;
+    const isToken = !!accessToken; // 모듈 내부 변수로 관리되는 access token
+
+    // 로그인한 상태지만 토큰 값이 없는 경우(= 로그인한 상태에서 새로고침 한 경우)
+    if (isLogin && !isToken) {
+      const response = await reissue(); // 토큰 재발급 요청(실패 시 다른 인터셉터에서 처리)
+      const { accessToken } = response;
+      if (accessToken) {
+        setAccessToken(accessToken); // 토큰 값 갱신
+        config.headers.Authorization = `Bearer ${accessToken}`; // 헤더에 토큰 추가
+        return config;
+      }
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+```
+
+`restoreTokenInstance`의 응답 인터셉터에도 기존의 토큰 재발급 로직을 추가하는 것을 잊지 않는다. 코드가 중복되어 따로 함수로 선언했다.
+
+```tsx
+restoreTokenInstance.interceptors.response.use(
+  (response) => response,
+  handleAccessTokenExpiredError
+);
+```
+
+마지막으로 api 인스턴스를 `restoreTokenInstance`로 변경하면 끝
+
+```tsx
+export const getOutfitByTemperature = async (tmp: number) => {
+  const response = await restoreTokenInstance.get(
+    `/posts/tmp?tmp=${tmp}&page=${1}&size=${10}`
+  );
+  return response.data;
+};
+```
+
+# 아쉬운 점
+
+axios interceptor를 이용한 방법은 새로고침 후 토큰 재발급 api가 연속으로 호출될 수 있다는 문제점이 있다. 만약 한 페이지에서 `restoreTokenInstance`를 사용한 api가 여러 개일 경우 reissue → reissue → api 1 → api 2 이런 순서로 처리될 가능성이 있기 때문에 예상치 못한 버그가 생길 수 있다.
+
+다행히 우리 프로젝트에서는 메인 페이지를 제외하고 페이지당 `restoreTokenInstance`를 사용한 api는 하나이며, 메인 페이지에서 `restoreTokenInstance`를 사용한 api 중 하나는 서버에서 현재 온도 값을 받아온 다음에 실행되기 때문에 토큰을 재발급 받은 후에 실행되어 문제가 없었다.
+
+만약 그렇지 않다면, 새로고침 후 토큰 재발급 요청은 한 번으로 제한해야 안정성을 확보할 수 있을 것 같다.
