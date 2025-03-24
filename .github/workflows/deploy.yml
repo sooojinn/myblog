@@ -19,3 +19,4 @@ jobs:
           script: |
             cd ~/myblog
             ./deploy.sh
+          envs_format: multiline
