@@ -31,3 +31,12 @@ export function formatDate(dateString: string) {
 export function capitalizeFirstLetter(str: string): string {
   return str[0].toUpperCase() + str.slice(1, str.length);
 }
+
+export const removeCodeBlocks = (text: string): string => {
+  return text.replace(/```[\s\S]*?```/g, ""); // 코드 블럭 제거
+};
+
+export const extractHeadings = (content: string): string[] => {
+  const noCodeBlock = removeCodeBlocks(content);
+  return noCodeBlock.split("\n").filter((str) => str.match(/^#{1,6}\s.+/)); // # ~ ###### 헤딩 추출
+};

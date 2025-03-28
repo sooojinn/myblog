@@ -1,14 +1,12 @@
 "use client";
 import { PostMainData } from "@/config/types";
-import { parseMarkdownHeading } from "@/lib/utilis";
+import { extractHeadings, parseMarkdownHeading } from "@/lib/utilis";
 import useScrollSpy from "@/hook/useScrollSpy";
 import TableOfContentItem from "./TableOfContentItem";
 import ScrollToTopButton from "./ScrollToTopBtn";
 
 export default function TableOfContent({ content }: PostMainData) {
-  const headings = content
-    .split("\n")
-    .filter((str) => str.match(/^(#{1,3})\s.*$/));
+  const headings = extractHeadings(content);
 
   const currentHeading = useScrollSpy();
 
