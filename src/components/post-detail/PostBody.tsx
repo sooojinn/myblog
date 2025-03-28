@@ -3,6 +3,7 @@ import remarkBreaks from "remark-breaks";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import { MdxComponents } from "../post/MdxComponents";
+import remarkGfm from "remark-gfm";
 
 export default function PostBody({ content }: { content: string }) {
   return (
@@ -11,7 +12,7 @@ export default function PostBody({ content }: { content: string }) {
         source={content}
         options={{
           mdxOptions: {
-            remarkPlugins: [remarkBreaks],
+            remarkPlugins: [remarkBreaks, remarkGfm],
             rehypePlugins: [
               [
                 // @ts-ignore
