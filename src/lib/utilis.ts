@@ -1,14 +1,3 @@
-import GithubSlugger from "github-slugger";
-
-export function parseMarkdownHeading(str: string) {
-  const slugger = new GithubSlugger();
-  const depth = (str.match(/^#+/)?.[0].length ?? 1) - 1;
-  const headingText = str.replace(/^#+/, "").trim();
-  const headingLink = slugger.slug(headingText);
-
-  return { depth, headingText, headingLink };
-}
-
 export function extractPreviewContent(markdown: string) {
   return markdown
     .replace(/^#{1,6}\s.*$/gm, "") // 헤더 제거
@@ -36,7 +25,14 @@ export const removeCodeBlocks = (text: string): string => {
   return text.replace(/```[\s\S]*?```/g, ""); // 코드 블럭 제거
 };
 
-export const extractHeadings = (content: string): string[] => {
-  const noCodeBlock = removeCodeBlocks(content);
-  return noCodeBlock.split("\n").filter((str) => str.match(/^#{1,6}\s.+/)); // # ~ ###### 헤딩 추출
+export const scrollToHeadingCenterById = (id: string) => {
+  const element = document.getElementById(id);
+  if (element) {
+    // 요소가 뷰포트 중앙에 오도록 스크롤
+    const topOffset = window.innerHeight / 2 - element.offsetHeight / 2;
+    window.scrollTo({
+      top: element.getBoundingClientRect().top + window.scrollY - topOffset,
+      behavior: "smooth",
+    });
+  }
 };

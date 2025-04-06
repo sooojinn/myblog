@@ -47,7 +47,7 @@ export default async function PostDetail({ params }: Props) {
     <section className="w-full relative">
       <ScrollProgressBar />
       <PostHeader {...postMetaData} />
-      <TableOfContent content={postMainText} />
+      <TableOfContent />
       <PostBody content={postMainText} />
     </section>
   );

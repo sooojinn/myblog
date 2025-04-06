@@ -6,10 +6,6 @@ export interface PostMetaData {
   category: string;
 }
 
-export interface PostMainData {
-  content: string;
-}
-
 export interface PostData {
   data: PostMetaData;
   content: string;
