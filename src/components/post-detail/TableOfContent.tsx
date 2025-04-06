@@ -34,8 +34,8 @@ export default function TableOfContent() {
   }, []);
 
   return (
-    <aside className="lg:absolute lg:left-full lg:translate-x-10 h-full">
-      <div className="lg:sticky lg:top-[50px] lg:min-w-[250px] text-[0.8rem]">
+    <aside className="lg:absolute lg:left-full lg:w-[calc((100vw-var(--main-width))/2)] lg:translate-x-10 h-full">
+      <div className="lg:sticky lg:top-[50px] lg:min-w-[250px] lg:w-fit text-[0.8rem]">
         <h3 className="font-semibold text-[1.1rem]">On This Page</h3>
         <div className="mt-3 mb-[30px] lg:mb-4 leading-[2em]">
           {headingData.map(({ text, id, depth }, index) => {

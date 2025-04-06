@@ -40,7 +40,7 @@ export default async function RootLayout({ children }: Props) {
     <html lang="ko">
       <body className={gothic.className}>
         <ThemeProvider>
-          <div className="min-w-[320px] max-w-[950px] min-h-screen mx-auto flex flex-col">
+          <div className="min-w-[320px] max-w-[var(--main-width)] min-h-screen mx-auto flex flex-col">
             <StaticDataProvider data={{ categoryLabelList, allTags }}>
               <Header />
               <main className="px-[5vw] flex flex-col flex-grow h-full">
