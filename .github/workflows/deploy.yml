@@ -22,3 +22,6 @@ jobs:
           script: |
             cd ~
             ./deploy.sh
+          timeout: "300s"
+          command_timeout: "10m"
+          request_pty: true
