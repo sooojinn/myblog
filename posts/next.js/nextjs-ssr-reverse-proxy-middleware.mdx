@@ -27,7 +27,7 @@ Next.js로 마이그레이션 했던 주요한 이유는 SSR을 구현해보기 
 
 ## 이제 할 일
 
-access token이 쿠키에 저장됐으니 api 요청 시 쿠키에서 access token 값을 빼와서 Authorization 헤더에 추가해 보내면 된다. 문제는 서버 컴포넌트에서는 쿠키에 문제 없이 접근 가능하나 클라이언트 컴포넌트에서는 접근하지 못한다는 것이다. (보안을 위해 HttpOnly 쿠키로 설정했기 때문에) 미들웨어에서 쿠키에 접근이 가능하다고 해서 api 요청 시 미들웨어에서 해당 로직을 처리하기로 했다.
+access token이 쿠키에 저장됐으니 **api 요청 시 쿠키에서 access token 값을 빼와서 `Authorization` 헤더에 추가**해 보내면 된다. 문제는 서버 컴포넌트에서는 쿠키에 문제 없이 접근 가능하나 클라이언트 컴포넌트에서는 접근하지 못한다는 것이다. (보안을 위해 HttpOnly 쿠키로 설정했기 때문에) 미들웨어에서 쿠키에 접근이 가능하다고 해서 api 요청 시 미들웨어에서 해당 로직을 처리하기로 했다.
 
 ---
 
@@ -251,6 +251,21 @@ const todayBestWearListData = await fetchWithAuth(`${BASEURL}/posts/top-liked`);
 ```
 
 ---
+
+# 결과
+
+<div style={{ display: "flex" }}>
+  <img
+    width="400"
+    src="/posts/next.js/nextjs-ssr-reverse-proxy-middleware/1.png"
+  />{" "}
+  <img
+    width="400"
+    src="/posts/next.js/nextjs-ssr-reverse-proxy-middleware/2.png"
+  />
+</div>
+
+이미지가 가장 많은 페이지를 로드할 때의 성능을 측정해보았다. SSR 적용 전과 비교했을 때 **LCP 속도가 3.4초에서 0.9초로 단축**되었다.
 
 # 마치며
 
